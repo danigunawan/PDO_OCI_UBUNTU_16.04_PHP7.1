@@ -1,0 +1,1762 @@
+1. install ubuntu from iso di vmware
+2. jika dari WIFI DHCP CLIENT set GUEST OS menjadi Network Adapter (Bridged Autodetect)
+3. install dengan membuat langsung user account: dhanexlab pass :29912120
+4. sudo /etc/ini
+5. sudo apt-get install openssh-server
+- di mac brew install ssh-copy-id # agar fungsi tidak masukan password lagi
+ssh-copy-id dhanexlab@192.168.88.100
+6. sudo nano /etc/network/interfaces
+
+# isikan :
+
+
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+#auto ens33
+#iface ens33 inet dhcp
+
+
+# STATIC
+auto ens33
+iface ens33 inet static
+address 192.168.88.100
+netmask 255.255.255.0
+network 192.168.88.0
+broadcast 192.168.88.255
+gateway 192.168.88.62
+dns-nameserver 8.8.8.8 8.8.4.4
+
+7. sudo ifdown ens33
+sudo ifup ens33
+
+8. sudo /etc/init.d/networking restart
+9. ifconfig # pastikan sudah sesuai interfaces diatas
+10. sudo apt-get update 
+sudo apt-get upgrade
+11. sudo apt-get install openssh server
+12. sudo nano /etc/ssh/sshd_config
+
+- ubah  :
+
+PermitRootLogin yes # menjadi yes
+
+13. sudo ufw allow 22 #allow port ssh server
+14. install webmin 
+REFF: https://www.digitalocean.com/community/tutorials/how-to-install-webmin-on-ubuntu-16-04
+
+- sudo nano /etc/apt/sources.list
+masukan : 
+deb http://download.webmin.com/download/repository sarge contrib
+- sudo wget http://www.webmin.com/jcameron-key.asc
+- sudo apt-key add jcameron-key.asc
+- sudo apt-get update 
+- sudo apt-get install webmin 
+- sudo ufw allow 10000
+- coba masuk ke https://ip:10000
+
+15. sudo apt-get install postgreesql # atau bisa via webmin install postgreesql
+- buka webmin -> servers -> postgresql
+- PostgreSQL Users
+- klik user postgres 
+- ganti password Set To : postgres
+jadi nanti login superuser dengan akun user : postgres dan password : postgres
+- Save
+- sudo ufw allow 5432
+- sudo nano etc/postgresql/9.5/main/postgresql.conf
+ubah listen_addresses menjadi : 
+listen_addresses = '*' # what IP address(es) to listen on;
+- lalu buka sudo nano etc/postgresql/9.5/main/pg_hba.conf
+# tambahkan di line paling bawah :
+host	 all		 all		 0.0.0.0/0		 md5
+- Sudo Service postgresql restart 
+- sudo service networking restart
+- tes telnet 192.168.88.100 5432
+
+
+16. coba konekan ke navicat :
+
+user : postgres
+pass : postgres
+db: postgres
+IP : 192.168.88.100
+adapter : postgresql
+port : 5432
+
+17. install mysql (di webmin)
+- buka webmin search mysql terus click here install
+
+# jika manual
+sudo apt-get update
+sudo apt-get install mysql-server
+mysql_secure_installation
+
+
+- buka sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+- ubah bind-address menjadi : 
+bind-address = 0.0.0.0 # atau ke menu mysql -> Mysql Server Configuration -> MySQL server listening address Set Ke 0.0.0.0
+
+- sudo ufw allow 3306
+- sudo service mysql restart
+- telnet localhost atau 192.168.88.100 3306
+- buka webmin ke servers->mysql
+
+## USER 1
+- Ke User Permissions klik user root 
+- Set Password Set To : 29912120 # set ke mysql_native_password bisa di navicat tapi harus buka 
+dengan akun dhanexlab baru bisa diganti 
+- Host ubah ke Any
+
+## USER 2
+- Ke User Permission klik create new user
+- isikan username dhanexlab
+- password set to : 29912120
+- Host : Any
+- Permission di select semua
+- Save
+- restart mysql
+- buka navicat isikan dengana ccount :
+user :dhanexlab
+pass : 29912120
+ip : 192.168.88.100
+port : 3306
+
+18. sudo apt-get install mc
+19. sudo apt-get install vim
+20. sudo apt-get install curl
+
+21. INSTALL DEPLOY RUBY ON RAILS
+
+sudo apt-get install -y nodejs
+sudo apt-get install gcc g++ make
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
+
+sudo apt-get update
+sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nodejs yarn
+
+cd
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+exec $SHELL
+
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+exec $SHELL
+
+rbenv install 2.5.1
+rbenv global 2.5.1
+ruby -v
+gem install bundler
+gem install rails
+
+sudo apt-get install ruby-dev
+sudo apt-get install imagemagick
+sudo apt-get install redis-server
+sudo apt-get install ruby-redis
+sudo apt-get install elasticsearch
+rbenv rehash
+
+22. INSTALL NGINX + PASSENGER
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
+sudo apt-get install -y apt-transport-https ca-certificates
+
+# Add Passenger APT repository
+sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main > /etc/apt/sources.list.d/passenger.list'
+sudo apt-get update
+
+# Install Passenger & Nginx
+sudo apt-get install -y nginx-extras passenger
+
+sudo service nginx start
+
+- sudo vim /etc/nginx/nginx.conf
+lalu ubah :
+
+#include /etc/nginx/passenger.conf;
+
+menjadi 
+
+include /etc/nginx/passenger.conf;
+
+- sudo nano /etc/nginx/passenger.conf
+
+ubah menjadi :
+
+# RBENV
+passenger_ruby /home/dhanexlab/.rbenv/shims/ruby; # If you use rbenv
+# passenger_ruby /home/dhanexlab/.rvm/wrappers/ruby-2.1.2/ruby; # If use use rvm, $
+# passenger_ruby /usr/bin/ruby; # If you use ruby from source
+
+#OTHER
+passenger_root /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini;
+#passenger_ruby /usr/bin/passenger_free_ruby;
+
+- sudo service nginx restart
+
+23. INSTALL MYSQL (TAMBAHAN)
+
+sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+
+24. INSTALL POSTGRESQL (TAMBAHAN)
+sudo apt-get install postgresql postgresql-contrib libpq-dev
+
+sudo su - postgres
+createuser --pwprompt deploy
+createdb -O deploy my_app_name_production # change "my_app_name" to your app's name which we'll also use later on
+exit
+
+24. NEW APPS RUBY
+
+
+- Configuring Git
+git config --global color.ui true
+git config --global user.name "Dani Gunawan"
+git config --global user.email "danigunawan.elektroug@gmail.com"
+ssh-keygen -t rsa -C "danigunawan.elektroug@gmail.com"
+
+- cat ~/.ssh/id_rsa.pub
+buka github account/settings->new ssh key copykan hasil dari cat ~/.ssh/id_rsa.pub lalu save 
+- cek berhasil atau ga
+
+ssh -T git@github.com
+
+- jika berhasil
+
+Hi excid3! You've successfully authenticated, but GitHub does not provide shell access.
+
+
+
+- cd /home/dhanexlab
+- rails new app -d postgresql
+- cd /app
+- nano Gemfile
+- uncomment gem ini : 
+# gem 'therubyracer',  platforms: :ruby
+- bundle install
+25. sudo nano /etc/nginx/sites-enabled/default
+
+- copy kan ini :
+
+server {
+        listen 80;
+        listen [::]:80 ipv6only=on;
+
+        server_name mydomain.com;
+        passenger_enabled on;
+        rails_env    development;
+        #rails_env    production;
+        root         /home/dhanexlab/app/public;
+
+        # redirect server error pages to the static page /50x.html
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+}
+
+26. cd /app
+echo "config/database.yml\nconfig/secrets.yml" >> .gitignore
+git add .gitignore
+git mv config/secrets.yml config/secrets.yml.example
+git mv config/database.yml config/database.yml.example
+git commit -m "Only store example secrets and database configs"
+cp config/secrets.yml.example config/secrets.yml
+cp config/database.yml.example config/database.yml
+
+You can run cap production deploy to deploy your application, but it's going to fail this first time because we haven't created either of these files on the server which we will do in just a second.
+
+linked file /home/deploy/build.gorails.com/shared/config/database.yml does not exist on IP_ADDRESS
+
+sudo nano /home/dhanexlab/app/config/database.yml
+lalu isikan :
+
+# /home/deploy/my_app_name/shared/config/database.yml :
+
+# PostgreSQL. Versions 8.2 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On OS X with Homebrew:
+#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
+# On OS X with MacPorts:
+#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
+# On Windows:
+#   gem install pg
+#       Choose the win32 build.
+#       Install PostgreSQL and put its /bin directory on your path.
+#
+# Configure Using Gemfile
+# gem 'pg'
+#
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  database: pis_development
+  host: localhost
+  username: postgres
+  password: postgres
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+
+  production:
+   adapter: postgresql
+  encoding: unicode
+  pool: 5
+  timeout: 5000
+  database: pis_production
+  host: localhost
+  username: postgres
+  password: postgres
+ - nano Gemfile
+ gem 'sqlite3'
+ gem 'pg', '~> 0.21.0'
+ gem 'tzinfo-data', platforms: [:x64_mingw, :mingw, :mswin]
+
+# Use ActiveModel has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
+# gem 'bcrypt', platforms: :ruby
+# gem 'bcrypt'
+gem 'bcrypt-ruby', '3.1.0', :require => 'bcrypt' # solusi pakai win 7 https://stackoverflow.com/questions/41621029/cannot-load-such-file-bcrypt-ext
+ - bundle update && bundle install
+ - rake db:setup/create/migrate/drop
+ - rails db:migrate
+ - sudo service nginx restart
+ - rake secret
+ ab60c50025fa75d16046c4d43c6704d2b195155d4458bc3f4f8c0e96f4b03aca9883461f0d6c68edfd32c3afa3cf4307f3409872d273113eebd696e8dfb72f01
+
+ - buat file di config/secrets.yml # sudo nano /config/secrets.yml
+ lalu kopikan hasil dari rake secret tadi ke secret_key_base
+
+ isi dari secrets.yml :
+
+ development:
+  #secret_key_base: 6a1ada9d8e377c8fad5e530d6e0a1daa3d17e43ee... 
+  secret_key_base: ab60c50025fa75d16046c4d43c6704d2b195155d4458bc3f4f8c0e96f4b03aca9883461f0d6c68edfd32c3afa3cf4307f3409872d273113eebd696e8dfb72f01
+  # Paste output of $ rake secret here for your dev machine.
+
+test:
+  #secret_key_base: _your_secret_ as above
+  secret_key_base: ab60c50025fa75d16046c4d43c6704d2b195155d4458bc3f4f8c0e96f4b03aca9883461f0d6c68edfd32c3afa3cf4307f3409872d273113eebd696e8dfb72f01
+
+production:
+  #secret_key_base: <%= secure_token %>
+  secret_key_base: ab60c50025fa75d16046c4d43c6704d2b195155d4458bc3f4f8c0e96f4b03aca9883461f0d6c68edfd32c3afa3cf4307f3409872d273113eebd696e8dfb72f01
+
+
+  STRIPE_PUBLISHABLE_KEY: 'Put your stripe keys for production'
+  STRIPE_SECRET_KEY: 'Put actual keys for production here'
+  FB_APP_SECRET: 'same as above'
+  FB_CALLBACK_URL: 'FB url here'
+  FB_CALLBACK_UPDATE_URL: 'FB url here'
+  GOOGLE_KEY: 'Put your keys for production'
+  GOOGLE_SECRET: 'same as above'
+  TWITTER_KEY: 'same as above'
+  TWITTER_SECRET: 'same as above'
+  TWITTER_USERNAME: 'same as above'
+  LINKEDIN_KEY: 'same as above'
+  LINKEDIN_SECRET: 'same as above'
+
+27. Capistrano Setup
+
+The first step is to add Capistrano to your Gemfile:
+
+gem 'capistrano', '~> 3.7', '>= 3.7.1'
+gem 'capistrano-rails', '~> 1.2'
+gem 'capistrano-passenger', '~> 0.2.0'
+
+# Add this if you're using rbenv
+# gem 'capistrano-rbenv', '~> 2.1'
+
+# Add this if you're using rvm
+# gem 'capistrano-rvm'
+
+
+- cap install STAGES=production
+
+- Next we need to make some additions to our Capfile to include bundler, rails, and rbenv/rvm (if you're using them). Edit your Capfile and add these lines:
+
+require 'capistrano/rails'
+require 'capistrano/passenger'
+
+# If you are using rbenv add these lines:
+# require 'capistrano/rbenv'
+# set :rbenv_type, :user
+# set :rbenv_ruby, '2.5.1'
+
+# If you are using rvm add these lines:
+# require 'capistrano/rvm'
+# set :rvm_type, :user
+# set :rvm_ruby_version, '2.5.1'
+
+- run cap production deploy
+
+28. IMSTALL SSL / SSL SELF SIGNED 
+REFF: https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
+
+sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+
+- sudo nano /etc/nginx/snippets/self-signed.conf
+ISIKAN :
+
+ssl_certificate /etc/ssl/certs/nginx-selfsigned.crt;
+ssl_certificate_key /etc/ssl/private/nginx-selfsigned.key;
+
+- sudo nano /etc/nginx/snippets/ssl-params.conf
+ISIKAN :
+
+# from https://cipherli.st/
+# and https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html
+
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers on;
+ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+ssl_ecdh_curve secp384r1;
+ssl_session_cache shared:SSL:10m;
+ssl_session_tickets off;
+ssl_stapling on;
+ssl_stapling_verify on;
+resolver 8.8.8.8 8.8.4.4 valid=300s;
+resolver_timeout 5s;
+# Disable preloading HSTS for now.  You can use the commented out header line that includes
+# the "preload" directive if you understand the implications.
+#add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+add_header Strict-Transport-Security "max-age=63072000; includeSubdomains";
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+
+ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+- sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+- sudo nano /etc/nginx/sites-available/default
+ISIKAN :
+
+## CONFIG 1
+
+#server {
+#        listen 80;
+#        listen [::]:80 ipv6only=on;
+
+#        server_name 192.168.88.27;
+#        passenger_enabled on;
+	#rails_env    production;
+#        rails_env    development;
+#        root         /home/dhanexlab/myapp/public;
+
+        # redirect server error pages to the static page /50x.html
+#        error_page   500 502 503 504  /50x.html;
+#        location = /50x.html {
+#            root   html;
+#        }
+#}
+
+
+### CONFIG 2 ALLOW BOTH HTTP
+
+#server {
+#        listen 80;
+#        listen [::]:80 ipv6only=on;
+#	listen 443 ssl http2 default_server;
+#    	listen [::]:443 ssl http2 default_server;
+
+#        server_name 192.168.88.27;
+#	include snippets/self-signed.conf;
+#    	include snippets/ssl-params.conf;
+       
+#	passenger_enabled on;
+	#rails_env    production;
+#        rails_env    development;
+#        root         /home/dhanexlab/myapp/public;
+
+        # redirect server error pages to the static page /50x.html
+#        error_page   500 502 503 504  /50x.html;
+#        location = /50x.html {
+#            root   html;
+#        }
+#}
+
+
+### CONFIG 3 REDIRECT HTTPS DEFAULT DARI PGASOL
+#server {
+#  listen 80;
+#  server_name 192.168.88.27;
+#  return 301 https://$host$request_uri;
+#  passenger_enabled on;
+  #passenger_app_env development;
+  #rails_env production;
+#  rails_env development;
+#  root /home/dhanexlab/myapp/public;
+#}
+
+#server {
+#  ssl on;
+#  listen 443 ssl;
+#  ssl_certificate /etc/ssl/ServerCertificate.crt;
+#  ssl_certificate_key /etc/ssl/commercial.key;
+#  ssl_client_certificate /etc/nginx/ssl/ServerCertificate.cer;
+#  ssl_verify_depth 2;
+#  server_name 192.168.88.27;
+#  ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+#  ssl_ciphers         HIGH:!aNULL:!MD5;
+#  passenger_enabled on;
+#  #passenger_app_env production;
+#  passenger_app_env development;
+#  root /home/dhanexlab/myapp/public;
+#}
+
+### CONFIG 4 BIKINAN SENDIRI HTTPS REDIRECT
+## SELF SIGNED CERT SSL : https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
+
+server {
+  listen 80;
+  listen [::]:80 ipv6only=on;
+  server_name 192.168.88.100;
+  return 301 https://$host$request_uri;
+  passenger_enabled on;
+  #passenger_app_env development;
+  #rails_env production;
+  rails_env development;
+  root /home/dhanexlab/app/public;
+}
+
+server {
+  ssl on;
+  listen 443 ssl;
+  listen [::]:446 ipv6only=on;
+
+  server_name 192.168.88.100;
+  include snippets/self-signed.conf;
+  include snippets/ssl-params.conf;
+  
+  passenger_enabled on;
+  #passenger_app_env production;
+  passenger_app_env development;
+  root /home/dhanexlab/app/public;
+  
+# redirect server error pages to the static page /50x.html
+  error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+      root   html;
+   }
+}
+
+
+- sudo service nginx restart
+
+###  RAKE CACHE ###
+https://github.com/rtomayko/rack-cache
+http://rtomayko.github.io/rack-cache/
+
+cd /app
+sudo gem install rack-cache
+
+- ke /config/application.rb
+
+tambahkan :
+config.action_dispatch.rack_cache = true
+sehingga :
+
+require_relative 'boot'
+
+require 'rails/all'
+
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
+
+module App
+  class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.2
+    config.action_dispatch.rack_cache = true
+    # Settings in config/environments/* take precedence over those specified here.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
+  end
+end
+
+- sudo nano Gemfile
+tambahkan :
+gem 'rack-cache'
+
+- bundle install
+- sudo service nginx restart
+
+
+
+29. INSTALL PHP + APACHE2 LARAVEL
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.1 php7.1-mcrypt php7.1-xml php7.1-gd php7.1-opcache php7.1-mbstring
+apt install php7.1 php7.1-xml php7.1-mbstring php7.1-mysql php7.1-json php7.1-curl php7.1-cli php7.1-common php7.1-mcrypt php7.1-gd libapache2-mod-php7.1 php7.1-zip
+sudo apt-get install apache2 libapache2-mod-php7.1
+cd /tmp
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+cd /var/www/html
+sudo composer create-project laravel/laravel your-project --prefer-dist
+sudo chgrp -R www-data /var/www/html/your-project
+sudo chmod -R 775 /var/www/html/your-project/storage
+cd /etc/apache2/sites-available
+- sudo nano laravel.conf
+isikan :
+
+<VirtualHost *:80>
+    ServerName yourdomain.tld
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/your-project/public
+
+    <Directory /var/www/html/your-project>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+sudo a2dissite 000-default.conf
+sudo a2ensite laravel.conf
+sudo a2enmod rewrite
+sudo service apache2 restart
+
+ - agar tidak bentrok dengan ruby port 80 kita ganti laravel.conf di /etc/apache2/sites-available
+
+sudo nano /etc/apache2/ports.conf
+sudo nano /etc/apache2/sites-available/000-default.conf
+sudo nano /etc/apache2/sites-available/laravel.conf
+sudo nano /etc/apache2/sites-available/default-ssl.conf
+
+PORT 80 menjadi VHOST HTTP menjadi port 83 dan SSL menjadi 444 atau default 443
+
+- sudo ufw allow 83
+- sudo service apache2 restart
+- sudo service networking restart
+
+
+30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
+sudo apt-get install php7.1-pgsql
+
+########## SQLSRV MSSQL MSODBC########
+
+
+https://serverpilot.io/community/articles/how-to-install-the-php-sqlsrv-extension.html
+
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list | sudo tee /etc/apt/sources.list.d/mssql-server-2017.list
+sudo apt-get update
+sudo apt-get install mssql-server
+sudo /opt/mssql/bin/mssql-conf setup 
+- pilih developer (2)
+- Pass : Dhan29912120
+
+
+
+ sudo apt-get -y install php7.1 libapache2-mod-php7.1 mcrypt php7.1-mcrypt php-mbstring php-pear php7.1-dev apache2
+ 
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-tools.list
+sudo apt-get update
+sudo ACCEPT_EULA=Y apt-get install mssql-tools
+sudo apt-get install unixodbc-dev
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bash_profile
+echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+source ~/.bashrc
+
+- sqlcmd -S localhost -U sa -P Dhan29912120
+- sqlcmd -S localhost -U sa -P Dhan29912120 -Q "SELECT @@VERSION"
+- sudo ufw allow 1433
+telnet localhost 1433
+telnet 192.168.88.100 1433
+- Login Navicat SQL SERVER
+Akun : 
+user : sa
+password : Dhan29912120
+Port : 1433
+initial database : master
+
+- Step 2.1 Install the PHP Driver for SQL Server
+sudo pecl install sqlsrv pdo_sqlsrv
+
+- buka pakai winscp/terminal /etc/php/7.1/mods-available
+- buat file pdo_sqlsrv.ini di /etc/php/7.1/mods-available dan isikan :
+
+; configuration for php mysql module
+; priority=20
+extension=pdo_sqlsrv.so
+- buat file sqlsrv.ini di /etc/php/7.1/mods-available dan isikan :
+; configuration for php mysql module
+; priority=20
+extension=pdo_sqlsrv.so
+- aktifkan modul sqlsrv dan pdo_sqlsrv
+sudo phpenmod sqlsrv
+sudo phpenmod pdo_sqlsrv
+- buka /etc/php/7.1/apache2/php.ini
+lalu tambahkan :
+
+## UBUNTU 16.04 PHP 7.1 MODULES EXT ##
+extension=sqlsrv.so
+extension=pdo_sqlsrv.so
+
+
+ATAU SPECIFIC PHP :
+
+sudo bash -c "echo extension=sqlsrv.so > /etc/php7.X-sp/conf.d/sqlsrv.ini"
+sudo bash -c "echo extension=pdo_sqlsrv.so > /etc/php7.X-sp/conf.d/pdo_sqlsrv.ini"
+
+- Step 2.2 Create a database for your application
+sqlcmd -S localhost -U sa -P Dhan29912120 -Q "CREATE DATABASE SampleDB;"
+
+- Step 2.3 Create a PHP app that connects to SQL Server and executes queries
+cd /var/www/html/
+mkdir SqlServerSample
+cd SqlServerSample
+sudo nano connect.php
+isikan :
+
+<?php
+    $serverName = "192.168.88.100";
+    $connectionOptions = array(
+        "Database" => "SampleDB",
+        "Uid" => "sa",
+        "PWD" => "Dhan29912120"
+    );
+    //Establishes the connection
+    $conn = sqlsrv_connect($serverName, $connectionOptions);
+    if($conn)
+        echo "Connected!"
+?>
+
+- cd /var/www/html/SqlServerSample
+- php connect.php # jika berhasil maka akan output connected !
+
+- buat SqlServerSample/phpinfo.php atau /var/www/html/your-project/public
+isikan :
+<?php
+phpinfo();
+?>
+
+- 192.168.88.100:83/phpinfo.php
+pastikan pdo sqlsrv dan sqlsrv sudah muncul terload
+
+- T-SQL SCRIPTS (Create Schema, Table, Insert Few a Rows)
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -Q "CREATE SCHEMA TestSchema;"
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -Q "CREATE TABLE TestSchema.Employees (Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY, Name NVARCHAR(50), Location NVARCHAR(50));"
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -Q "INSERT INTO TestSchema.Employees (Name, Location) VALUES (N'Jared', N'Australia'), (N'Nikita', N'India'), (N'Tom', N'Germany');"
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -Q "SELECT * FROM TestSchema.Employees;"
+
+- cd /var/www/html/SqlServerSample
+sudo nano crud.php isikan :
+
+<?php
+$serverName = "localhost";
+$connectionOptions = array(
+    "Database" => "SampleDB",
+    "Uid" => "sa",
+    "PWD" => "Dhan29912120"
+);
+//Establishes the connection
+$conn = sqlsrv_connect($serverName, $connectionOptions);
+
+//Insert Query
+echo ("Inserting a new row into table" . PHP_EOL);
+$tsql= "INSERT INTO TestSchema.Employees (Name, Location) VALUES (?,?);";
+$params = array('Jake','United States');
+$getResults= sqlsrv_query($conn, $tsql, $params);
+$rowsAffected = sqlsrv_rows_affected($getResults);
+if ($getResults == FALSE or $rowsAffected == FALSE)
+    die(FormatErrors(sqlsrv_errors()));
+echo ($rowsAffected. " row(s) inserted: " . PHP_EOL);
+
+sqlsrv_free_stmt($getResults);
+
+//Update Query
+
+$userToUpdate = 'Nikita';
+$tsql= "UPDATE TestSchema.Employees SET Location = ? WHERE Name = ?";
+$params = array('Sweden', $userToUpdate);
+echo("Updating Location for user " . $userToUpdate . PHP_EOL);
+
+$getResults= sqlsrv_query($conn, $tsql, $params);
+$rowsAffected = sqlsrv_rows_affected($getResults);
+if ($getResults == FALSE or $rowsAffected == FALSE)
+    die(FormatErrors(sqlsrv_errors()));
+echo ($rowsAffected. " row(s) updated: " . PHP_EOL);
+sqlsrv_free_stmt($getResults);
+
+//Delete Query
+$userToDelete = 'Jared';
+$tsql= "DELETE FROM TestSchema.Employees WHERE Name = ?";
+$params = array($userToDelete);
+$getResults= sqlsrv_query($conn, $tsql, $params);
+echo("Deleting user " . $userToDelete . PHP_EOL);
+$rowsAffected = sqlsrv_rows_affected($getResults);
+if ($getResults == FALSE or $rowsAffected == FALSE)
+    die(FormatErrors(sqlsrv_errors()));
+echo ($rowsAffected. " row(s) deleted: " . PHP_EOL);
+sqlsrv_free_stmt($getResults);
+
+
+//Read Query
+$tsql= "SELECT Id, Name, Location FROM TestSchema.Employees;";
+$getResults= sqlsrv_query($conn, $tsql);
+echo ("Reading data from table" . PHP_EOL);
+if ($getResults == FALSE)
+    die(FormatErrors(sqlsrv_errors()));
+while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
+    echo ($row['Id'] . " " . $row['Name'] . " " . $row['Location'] . PHP_EOL);
+
+}
+sqlsrv_free_stmt($getResults);
+
+function FormatErrors( $errors )
+{
+    /* Display errors. */
+    echo "Error information: ";
+
+    foreach ( $errors as $error )
+    {
+        echo "SQLSTATE: ".$error['SQLSTATE']."";
+        echo "Code: ".$error['code']."";
+        echo "Message: ".$error['message']."";
+    }
+}
+?>
+
+- php crud.php
+
+- Step 3.1 Create a new table with 5 million using sqlcmd
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -t 60000 -Q "WITH a AS (SELECT * FROM (VALUES(1),(2),(3),(4),(5),(6),(7),(8),(9),(10)) AS a(a))
+SELECT TOP(5000000)
+ROW_NUMBER() OVER (ORDER BY a.a) AS OrderItemId
+,a.a + b.a + c.a + d.a + e.a + f.a + g.a + h.a AS OrderId
+,a.a * 10 AS Price
+,CONCAT(a.a, N' ', b.a, N' ', c.a, N' ', d.a, N' ', e.a, N' ', f.a, N' ', g.a, N' ', h.a) AS ProductName
+INTO Table_with_5M_rows
+FROM a, a AS b, a AS c, a AS d, a AS e, a AS f, a AS g, a AS h;"
+
+
+- Step 3.2 Create a PHP app that queries this tables and measures the time taken
+cd /var/www/html
+sudo mkdir SqlServerColumnstoreSample
+cd SqlServerColumnstoreSample
+
+sudo nano columnstore.php isikan :
+
+<?php
+$time_start = microtime(true);
+
+$serverName = "localhost";
+$connectionOptions = array(
+    "Database" => "SampleDB",
+    "Uid" => "sa",
+    "PWD" => "Dhan29912120"
+);
+//Establishes the connection
+$conn = sqlsrv_connect($serverName, $connectionOptions);
+
+//Read Query
+$tsql= "SELECT SUM(Price) as sum FROM Table_with_5M_rows";
+$getResults= sqlsrv_query($conn, $tsql);
+echo ("Sum: ");
+if ($getResults == FALSE)
+    die(FormatErrors(sqlsrv_errors()));
+while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
+    echo ($row['sum'] . PHP_EOL);
+
+}
+sqlsrv_free_stmt($getResults);
+
+function FormatErrors( $errors )
+{
+    /* Display errors. */
+    echo "Error information: ";
+
+    foreach ( $errors as $error )
+    {
+        echo "SQLSTATE: ".$error['SQLSTATE']."";
+        echo "Code: ".$error['code']."";
+        echo "Message: ".$error['message']."";
+    }
+}
+$time_end = microtime(true);
+$execution_time = round((($time_end - $time_start)*1000),2);
+echo 'QueryTime: '.$execution_time.' ms';
+
+
+?>
+
+- php columnstore.php
+
+- Step 3.4 Add a columnstore index to your table.
+sqlcmd -S localhost -U sa -P Dhan29912120 -d SampleDB -Q "CREATE CLUSTERED COLUMNSTORE INDEX Columnstoreindex ON Table_with_5M_rows;"
+
+- Step 3.5 Measure how long it takes to run the query with a columnstore index
+php columnstore.php
+
+
+########## END SQLSRV MSSQL MSODBC########
+REFF: 
+https://github.com/nepanuceno/Install-PDO_OCI-AND-OCI8-LINUX-UBUNTU-16.04
+
+cd /var/www/html/
+sudo mkdir installocipdo
+cd installocipdo
+sudo nano install_pdo_oci.sh
+
+
+########## PDO OCI, OCI8 OCI11G EXT ########
+REFF:
+https://github.com/nepanuceno/Install-PDO_OCI-AND-OCI8-LINUX-UBUNTU-16.04
+
+* N O T E : Semua file php-7.1.18.tar.gz Instant Client Package Basic dan Instant Client Package SDK harus satu direktori di folder installocipdo
+
+cd /var/www/html
+sudo mkdir installocipdo
+
+### PINDAHKAN HASIL DOWNLOAD DIBAWAH INI KE DIR/FOLDER /var/www/html/installocipdo :
+
+# Download Instant Client Basic
+-http://in2.php.net/get/php-7.1.18.tar.gz/from/a/mirror    #untuk versi php 7.1.18-1
+simpan php-7.1.18.tar.gz di /var/www/html/installocipdo menggunakan filezilla atau winscp
+
+# Download Instant Client package dari oracle dengan Version 11.2.0.4.0
+REFF : http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html
+- Allow Accept dlu diweb oracle
+lalu download BASIC Versi 11.2.0.4.0
+
+http://download.oracle.com/otn/linux/instantclient/11204/instantclient-basic-linux.x64-11.2.0.4.0.zip
+
+lalu download SDK Versi 11.2.0.4.0
+
+http://download.oracle.com/otn/linux/instantclient/11204/instantclient-sdk-linux.x64-11.2.0.4.0.zip
+
+- cd /var/www/html/installocipdo
+sudo nano install_pdo_oci.sh
+isikan : 
+
+
+#!/bin/bash
+
+apt-get install php7.1-dev build-essential php-pear libaio1 -y
+
+#Diretorio de instalacao do Oracle Instant Client
+install_dir="/opt/oracle"
+
+#Captura diretorio do usuário
+user_dir="$(echo ~)" #padrao, modifique de acordo com a sua necessidade
+
+#PATH do php.ini
+php_ini="/etc/php/7.1/apache2/php.ini"
+#php_ini="0"
+
+mods_available="/etc/php/7.1/mods-available"
+mods_enable="/etc/php/7.1/apache2/conf.d/"
+
+#replace="apache2"
+#path_php_ini="$(php --ini | grep Loaded | cut -d" " -f12)"
+
+
+#echo php_ini=${path_php_ini/"cli"/$replace}
+
+#limpar tela
+clear
+
+#Verificar os pre-requisitos para instalação
+
+if [ $install_dir = "" ]; then
+    echo "\033[01;31;47mÉ necessário informar o PATH do diretório de instalação para o Oracle Instant Client. (Ex: \"/opt/oracle\").\033[0m  - \033[01;32;31mERRO"
+    exit
+fi
+
+if [ $user_dir = "0" ]; then
+    echo "\033[01;31;47mÉ necessário informar o PATH do diretório do usuário. (Ex:"$(echo ~)").\033[0m  - \033[01;32;31mERRO"
+    exit
+fi
+
+if [ $php_ini = "0" ]; then
+    echo "\033[01;31;47mÉ necessário informar o PATH do arquivo php.ini (EX: /etc/php/7.1/apache2/php.ini).\033[0m  - \033[01;32;31mERRO"
+    exit
+fi
+
+#exit
+if [ -e instantclient-basic-*.zip ]; then
+        echo "\033[01;34;47mInstantclient-basic - \033[01;32;40mOK"
+else
+    echo "\033[01;31;47mÉ necessário que o instalador instantclient-basic-*.zip esteja no mesmo diretório deste script.\033[0m  - \033[01;32;31mERRO"
+    exit
+fi
+
+if [ -e instantclient-sdk-*.zip ]; then
+        echo "\033[01;34;47mInstantclient-sdk - \033[01;32;40mOK"
+else
+    echo "\033[01;31;47mÉ necessário que o instalador instantclient-sdk-*.zip esteja no mesmo diretório deste script.\033[0m - \033[01;32;31mERRO"
+    exit
+fi
+
+tag=0
+
+if [ -e php-7.*.tar.gz ]; then
+    echo "\033[01;34;47mPreparando instalador PHP"
+    tar -vzxf php-7.*.tar.gz
+    tag=1
+fi
+
+if [ -e php-7.*.tar.bz2 ]; then
+    echo "\033[01;34;47mPreparando instalador PHP"
+    tar -vxf php-7.*.tar.bz2
+    tag=1
+fi
+
+if [ -e php-7.*.tar.xz ]; then
+    echo "\033[01;34;47mPreparando instalador PHP"
+    tar -vxJf php-7.*.tar.xz -C
+    tag=1
+fi
+
+
+
+
+if [ $tag = 0 ]; then
+    echo "\033[01;31;47mÉ necessário a presença do pacote do PHP7.* no mesmo diretório que este script.\033[0m  - \033[01;32;31mERRO"
+    exit
+else
+    echo "\033[01;34;47mInstalador PHP7.* - \033[01;32;40mOK"
+fi
+
+
+
+
+#echo "ATENÇÃO, CERTIFIQUE-SE DE QUE O DIRETORIO \"instantclient\" esteja no mesmo diretorio deste Script."
+echo "\033[01;34;47mVerificando pacotes de instalação do Oracle Instant Client.\033[0m"
+versao="$(find . -name "*instantclient-*" | grep -Po "(\d+\.)+\d+" | cut -c 1-4)"
+v1="$(echo $versao | cut -c 1-4)"
+v2="$(echo $versao | cut -c 6-9)"
+
+# Equality Comparison
+if [ "$v1" = "$v2" ] && [ $v1 != "" ] && [ $v1 != " " ]; then
+    echo "Instaladores do Oracle Instant Client - \033[01;34;41mOK"
+else
+    echo "Instaladores do Oracle Instant Client - \033[05;37;41mERROR"
+    exit
+fi
+#
+
+echo "\033[01;34;47mVersão do Oracle Instant Client: \033[01;34;41m$(echo $versao | cut -c 1-4) \033[01;37m\033[01;37m"
+echo "\033[0m"
+echo ""
+
+
+#Descomprimir os instaladores
+sudo -S unzip "instantclient-*.zip" -d $install_dir
+#
+#Renomeia o Instantclient_X_X
+cmd="$(sudo mv $install_dir/instantclient* $install_dir/instantclient)"
+#
+#captura a versao da lib, que pode ser diferente da versao vinda no nome do pacote
+versao_lib="$(find $install_dir/instantclient -name "*lib*" | grep -Po "(\d+\.)+\d+" | cut -c 1-4 | uniq)"
+#
+#Gerando alguns Links simbólicos
+if [ $v1 = "12.1" ]; then
+    cmd="$(sudo ln -s $install_dir/instantclient/libclntshcore.so.$versao_lib $install_dir/instantclient/libclntshcore.so)"
+fi
+#
+
+
+cmd="$(sudo ln -s $install_dir/instantclient/libclntsh.so.$versao_lib $install_dir/instantclient/libclntsh.so)"
+cmd="$(sudo ln -s $install_dir/instantclient/libocci.so.$versao_lib $install_dir/instantclient/libocci.so)"
+
+#Gravar os PATH do Oracle Instant Client no arquivo de inicialização do perfil do Usuario
+a="export LD_LIBRARY_PATH=$install_dir/instantclient:\$LD_LIBRARY_PATH"
+b="export PATH=$install_dir/instantclient:\$PATH"
+c="export ORACLE_HOME=$install_dir/instantclient"
+d="export PATH=\$ORACLE_HOME:\$PATH"
+
+
+echo $a >> $user_dir"/.bashrc"
+echo $b >> $user_dir"/.bashrc"
+echo $c >> $user_dir"/.bashrc"
+echo $d >> $user_dir"/.bashrc"
+
+
+echo "########################__COMPILANDO OCI8__############################"
+
+cd php*/ext/oci8
+#ls -lah
+phpize
+./configure --with-oci8=shared,instantclient,$install_dir/instantclient,$v1
+make clean
+make
+#make test
+cmd = $(sudo -S make install)
+#echo "\033[01;34;41m$cmd\033[0m"
+
+cd ../pdo_oci
+echo "######################__COMPILANDO__PDO_OCI__##########################"
+
+phpize
+./configure --with-pdo-oci=instantclient,$install_dir/instantclient,$v1
+make clean
+make
+#make test
+cmd = $(sudo -S make install)
+#echo "\033[01;34;41m$cmd\033[0m"
+
+#php --ini | grep Loaded | cut -d" " -f12
+
+echo "Configurando as extensões PDO_OCI e OCI8"
+sudo echo "extension=pdo_oci.so" >> $php_ini
+sudo echo "extension=oci8.so" >> $php_ini
+
+sudo touch $mods_available"/pdo_oci.ini"
+sudo touch $mods_available"/oci8.ini"
+
+sudo echo "extension=pdo_oci.so" >> $mods_available"/pdo_oci.ini"
+sudo echo "extension=oci8.so" >> $mods_available"/oci8.ini"
+
+cd $mods_enable
+sudo ln -s $mods_available/pdo_oci.ini 10-pdo_oci.ini
+sudo ln -s $mods_available/oci8.ini 10-oci8.ini
+
+ls -lah
+
+echo "Reiniciando o serviço do Apache"
+sudo service apache2 restart
+
+
+echo "Verifique o seu PHP com o comando php -m e confira se os módulo foram instalados corretamente."
+
+exit
+
+- sudo sh install_pdo_oci.sh
+- sudo service apache2 restart
+- php -m | grep oci
+pastikan muncul : oci dan pdo_oci
+- coba lihat juga phpinfo
+- Membuat Check Connect OCI
+cd /var/www/html/installocipdo
+sudo nano ociconnect.php
+isikan : 
+
+<?php
+        $db = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SID=opc)))" ;
+
+        if($c = OCILogon("yourusernamedb", "yourpasswordb", $db))
+        {
+            echo "Successfully connected to Oracle.\n";
+            OCILogoff($c);
+        }
+        else
+        {
+            $err = OCIError();
+            echo "Connection failed." . $err[text];
+        }
+?>
+
+# GANTI AKUN DB OCI DIATAS SESUAI DENGAN YANG ADA/INGIN DITES
+- ALLOW PORT OCI 
+sudo ufw allow 1521
+
+NOTE : JIKA PADA SISI SERVER ORACLE MISAL WINDOWS DI ALLOW DLU
+## REFF: 
+https://mjawaid.wordpress.com/2012/03/01/allowing-oracle-ports-in-windows-firewall/
+http://blog.kyodium.net/2011/09/windows-firewall-blocks-oracle.html
+
+
+- php ociconnect.php / lewat browser bisa http://192.168.88.100/ociconnect.php
+
+########## END PDO OCI, OCI8 OCI11G EXT ########
+
+## CUMAN BUILD PECL SQLSRV AND PDO_SQLSRV
+curl -s https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+sudo bash -c "curl -s https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list"
+sudo apt-get update
+sudo ACCEPT_EULA=Y apt-get -y install msodbcsql mssql-tools
+sudo apt-get -y install unixodbc-dev
+sudo apt-get -y install gcc g++ make autoconf libc-dev pkg-config
+
+sudo apt-get -y install gcc g++ make autoconf libc-dev pkg-config
+sudo pecl7.X-sp install sqlsrv
+sudo pecl7.X-sp install pdo_sqlsrv
+
+sudo bash -c "echo extension=sqlsrv.so > /etc/php7.X-sp/conf.d/sqlsrv.ini"
+sudo bash -c "echo extension=pdo_sqlsrv.so > /etc/php7.X-sp/conf.d/pdo_sqlsrv.ini"
+sudo service php7.X-fpm-sp restart
+
+php7.X-sp -i | grep -i sqlsrv
+
+### IF UNINSTALLING SQLSRV
+sudo rm /etc/phpX.Y-sp/conf.d/sqlsrv.ini
+sudo rm /etc/phpX.Y-sp/conf.d/pdo_sqlsrv.ini
+sudo peclX.Y-sp uninstall sqlsrv
+sudo peclX.Y-sp uninstall pdo_sqlsrv
+
+sudo service phpX.Y-fpm-sp restart
+
+
+- cek modul extension yang aktif : 
+php -m
+php -m | grep oci
+
+######### HISTORY #############
+Last login: Fri Jun 22 23:13:38 on console
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
+/usr/local/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/Users/danigunawan/.ssh/id_rsa.pub"
+
+^C
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
+/usr/local/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/Users/danigunawan/.ssh/id_rsa.pub"
+
+
+
+
+^C
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh dhanexlab@192.150..168.88.26
+ssh: Could not resolve hostname 192.150..168.88.26: -65540
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh dhanexlab@192.168.88.26
+ssh: connect to host 192.168.88.26 port 22: Operation timed out
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ history
+    6  bundle env
+    7  rake db:create
+    8  bundle install
+    9  rake db:create
+   10  bundle install
+   11  bundle install
+   12  bundle install
+   13  bundle install
+   14  bundle install
+   15  bundle exec rake db:create
+   16  bundle install
+   17  bundle exec rake db:create
+   18  gem install rdoc
+   19  bundle exec rake db:create
+   20  bundle exec rake db:create
+   21  bundle exec rake db:create
+   22  gem install iconv
+   23  bundle exec rake db:create
+   24  bundle install
+   25  bundle exec rake db:create
+   26  bundle install
+   27  bundle exec rake db:create
+   28  bundle install
+   29  bundle exec rake db:create
+   30  bundle exec rake db:create
+   31  bundle show test-unit
+   32  bundle show mysql2
+   33  gem install test-unit
+   34  bundle exec rake db:create
+   35  bundle install
+   36  bundle exec rake db:create
+   37  bundle exec rake db:create
+   38  bundle install
+   39  bundle update
+   40  bundle exec rake db:create
+   41  gem remove
+   42  gem remove test-unit
+   43  gem uninstall test-unit
+   44  bundle install
+   45  bundle exec rake db:create
+   46  gem uninstall test-unit
+   47  bundle exec rake db:create
+   48  bundle install
+   49  bundle exec rake db:create
+   50  gem uninstall test-unit
+   51  bundle exec rake db:create
+   52  bundle exec rake db:create
+   53  gem uninstall test-unit
+   54  bundle install
+   55  bundle exec rake db:create
+   56  gem install rails
+   57  rails db:migrate
+   58  rails db:create
+   59  bundler
+   60  rails db:create
+   61  cd ..
+   62  cd conmed/
+   63  bundle install
+   64  rake db:create
+   65  rake db:schema:load
+   66  rake db:migrate
+   67  rake db:seed
+   68  rails s
+   69  cd ..
+   70  cd crapper_keeper/
+   71  bundle install
+   72  rake db:create
+   73  bundle install
+   74  rake db:create
+   75  bundle exec rake db:create
+   76  gem install bundler
+   77  bundle exec rake db:create
+   78  rails db:create
+   79  bundle exec rake db:create
+   80  rake db:schema:load
+   81  bundle exec rake db:migrate
+   82  bundle exec rake db:migrate
+   83  rake db:schema:load
+   84  cd ..
+   85  cd daily_spending
+   86  bundle install
+   87  bundle install
+   88  rake db:create
+   89  rake db:schema:load
+   90  rake db:seed
+   91  rails s
+   92  cd ..
+   93  cd daily_spending_mysql/
+   94  bundle install
+   95  rake db:create
+   96  rake db:schema:load
+   97  rake db:seed
+   98  rails s
+   99  cd ..
+  100  cd dcaf_case_management/
+  101  bundle install
+  102  rbenv global 2.5.1
+  103  gem install bundler
+  104  bundle install
+  105  rake db:create
+  106  rake db:schema:load
+  107  rails s
+  108  cd ..
+  109  cd dhk_manage_user/
+  110  bundle install
+  111  rake db:create
+  112  rake db:create
+  113  bundle exec rake db:migrate
+  114  rake db:schema:load
+  115  rake db:create
+  116  rake db:create
+  117  rake db:migrate
+  118  rake db:migrate RAILS_ENV = development
+  119  cd ..
+  120  cd diaper/
+  121  bundle install
+  122  rake db:create
+  123  rails s
+  124  rails s
+  125  netstat -tlnp
+  126  netstat
+  127  netstat -tl
+  128  netstat -p
+  129  netstat -tln
+  130  kill -9 3000
+  131  rails s
+  132  rails s -p 3001
+  133  cd ..
+  134  cd doctor/
+  135  bundle install
+  136  rake db:create
+  137  rake db:schema:load
+  138  rake db:seed
+  139  rails s -p 3001
+  140  cd ..
+  141  cd  egm-pos/
+  142  bundle install
+  143  rake db:create
+  144  rake db:schema:load
+  145  ruby -v
+  146  rbenv global 2.3.3
+  147  gem install bundler
+  148  rake db:migrate
+  149  bundle install
+  150  rake db:migrate
+  151  rake db:schema:load
+  152  rake db:schema:load
+  153  rake db:seed
+  154  rake db:Seed
+  155  rake db:seed
+  156  rails s
+  157  bundle install
+  158  rake asset:clean
+  159  rails s
+  160  rails s
+  161  rails s
+  162  rails s
+  163  cd ..
+  164   cd fat_free_crm/
+  165  bundle install
+  166  rake db:create
+  167  rake db:schema:load
+  168  rails s
+  169  rails s -p 3001
+  170  pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+  171  cd Ruby\ On\ Rails/
+  172  cd PROJECT/
+  173  cd fedena/
+  174  bundle install
+  175  rake db:create
+  176  rake db:schema:load
+  177  gem install rails
+  178  rake db:schema:load
+  179  bundle exec rake db:schema:load
+  180  bundle install
+  181  bundle exec rake db:schema:load
+  182  rails db:create
+  183  bundle exec rake db:schema:load
+  184  ping 8.8.8
+  185  ping 8.8.8.8
+  186  pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start
+  187  cd ..
+  188  cd flight-booker/
+  189  bundle install
+  190  rake db:create
+  191  rake db:schema:load
+  192  rake db:seed
+  193  rails s
+  194  cd ..
+  195  cd frab/
+  196  bundle install
+  197  rake db:create
+  198  rails s
+  199  cd ..
+  200  cd GildedRose/
+  201  bundle install
+  202  rake db:create
+  203  rake db:schema:load
+  204  rake db:seed
+  205  rails s
+  206  cd ..
+  207  cd Greenleaf-Inventory-Management-System/
+  208  bundle install
+  209  rbenv install 2.2.4
+  210  rbenv install 2.2.5
+  211  rbenv global 2.2.5
+  212  gem install bundler
+  213  bundle install
+  214  bundle install
+  215  rake db:create
+  216  rake db:schema:load
+  217  rake db:seed
+  218  rails s
+  219  cd ..
+  220  cd GustiLogistics/
+  221  bundle install
+  222  rake db:create
+  223  bundle exec rake db:create
+  224  bundle install
+  225  bundle exec rake db:create
+  226  rails s
+  227  rails s
+  228  cd ..
+  229  cd GymManagementSystem/
+  230  bundle install
+  231  rake db:create
+  232  rake db:schema:load
+  233  rake db:schema:load
+  234  rake db:migrate:status
+  235  rake db:seed
+  236  rails s
+  237  rails s
+  238  cd ..
+  239  cd home-inventory/
+  240  bundle install
+  241  bundle exec rake db:create
+  242  rake db:migrate
+  243  rails s
+  244  cd ,,
+  245  cd ..
+  246  cd hospital_management_app/
+  247  bundle install
+  248  bundle update activerecord
+  249  rbenv global 2.3.3
+  250  gem install bundler
+  251  bundle install
+  252  bundle update activerecord
+  253  bundle update
+  254  undle install --full-index
+  255  undle install --full
+  256  bundle install
+  257  cd ..
+  258  cd hrm-rails/
+  259  bundle install
+  260  rake db:create
+  261  rake db:schema:load
+  262  rake db:seed
+  263  rails s
+  264  rake db:seed
+  265  rails s
+  266  cd ..
+  267  cd HRMApp/
+  268  bundle install
+  269  cd ..
+  270  cd HRMApp/
+  271  rbenv global 1.9.3
+  272  rbenv install 1.9.3
+  273  rbenv install 1.9.3-dev
+  274  rbenv global 1.9.3
+  275  rbenv global 1.9.3-dev
+  276  gem install bundler
+  277  bundle install
+  278  rbenv global 2.3.3
+  279  bundle install
+  280  bundle install
+  281  gem install rmagick
+  282  brew install rmagick
+  283  bundle install
+  284  rake db:create
+  285  rake db:create
+  286  cd ..
+  287  cd hrms
+  288  bundle install
+  289  rake db:create
+  290  rails s
+  291  cd ..
+  292  cd hrms2/
+  293  bundle install
+  294  rake db:create
+  295  rake db:create
+  296  rake db:create
+  297  rake secret
+  298  secret_key_base
+  299  secret_key_base
+  300  rake secret -e development
+  301  rake secret 
+  302  rake db:create
+  303  rake db:create
+  304  rake db:schema:load
+  305  rake db:create
+  306  rake db:migrate
+  307  rails s
+  308  cd ..
+  309  cd inventorious/
+  310  bundle install
+  311  bundle install
+  312  rake db:create
+  313  rake db:schema:load
+  314  rake db:seed
+  315  rails s
+  316  cd ..
+  317  cd Inventory-and-Sales-Management-System/
+  318  bundle install
+  319  rake db:create
+  320  rake db:schema:load
+  321  rake db:schema:load
+  322  rake db:schema:load
+  323  rake db:seed
+  324  rails s
+  325  cd ..
+  326  cd inventory-api-jwt/
+  327  bundle install
+  328  rbenv install 2.4.4
+  329  rbenv global 2.4.4
+  330  gem install bundler
+  331  bundler
+  332  rake db:create
+  333  rake db:create
+  334  rake db:create
+  335  rake db:schema:load
+  336  rake db:seed
+  337  rails s
+  338  cd ..
+  339  cd iqvoc/
+  340  bundle install
+  341  rake db:create
+  342  rake db:create
+  343  rake db:schema:load
+  344  rake db:seed
+  345  rails s
+  346  cd ..
+  347  cd jetapp/
+  348  bundle install
+  349  rake db:create
+  350  rails s
+  351  rbenv global 2.3.3
+  352  gem install bundler
+  353  rails s
+  354  cd ..
+  355   cd karmahrm/
+  356  bundle install
+  357  rbenv global 2.3.1
+  358  gem install bundler
+  359  bundle install
+  360  ruby -v
+  361  ruby -v
+  362  bundle install
+  363  rbenv global 2.3.3 
+  364  bundle install
+  365  rake db:create
+  366  rails s
+  367  cd ..
+  368  cd library_system_ruby/
+  369  bundle install
+  370  bundle install
+  371  rake db:create
+  372  rake db:schema:load
+  373  rake db:seed
+  374  history
+  375  bundle install
+  376  history
+  377  rails s
+  378  cd ..
+  379  cd madrilla/
+  380  bundle install
+  381  bundle install
+  382  rbenv global 1.9.3
+  383  rbenv install 1.9.3
+  384  rbenv global 1.9.3-p551
+  385  rbenv global 1.9.3-dev
+  386  bundle install
+  387  ruby -v
+  388  rbenv install 1.9.3
+  389  rbenv install 1.9.3-p551
+  390  rbenv global 1.9.3-p551 
+  391  gem install bundler
+  392  bundle install
+  393  bundle install
+  394  ruby -v
+  395  rbenv global 1.9.3-dev
+  396  ruby -v
+  397  rbenv global 2.3.3
+  398  ruby -v
+  399  ruby -v
+  400  rbenv global 1.9.3
+  401  rbenv global 2.3.3
+  402  ruby -v
+  403  bundle install
+  404  rbenv global 1.9.3-dev
+  405  gem install bundler
+  406  rbenv global 2.3.3
+  407  gem install bundler
+  408  ls
+  409  bundle install
+  410  rbenv global 1.9.3-dev
+  411  bundle install
+  412  gem install bundler
+  413  ruby -
+  414  ruby -v
+  415  rbenv global 1.9.3-dev
+  416  ruby -v
+  417  ruby -v
+  418  ruby -v
+  419  gem install bundler
+  420  bundle install
+  421  bundle install
+  422  rbenv global 2.3.3
+  423  bundle install
+  424  brew install imagemagick
+  425  brew install imagemagick@6
+  426  bundle install
+  427  sudo apt-get install libmagick++-dev
+  428  brew unlink imagemagick
+  429  brew install imagemagick@6 && brew link imagemagick@6 --force
+  430  bundle install
+  431  rake db:create
+  432  rake db:create
+  433  rake db:create
+  434  ruby -v
+  435  rbenv gloal 1.9.3-dev
+  436  rbenv global 1.9.3-dev
+  437  bundle install
+  438  rbenv global 2.3.3
+  439  bundle install
+  440  bundle exec rake db:create
+  441  cd ..
+  442  cd ManageMe/
+  443  bundle install
+  444  rake db:create
+  445  rake db:schema:load
+  446  rake db:seed
+  447  rails s
+  448  git pull
+  449  cd ..
+  450  cd medguru/
+  451  bundle install
+  452  rake db:create
+  453  rake db:create
+  454  rake db:schema:load
+  455  rake db:seed
+  456  rails s
+  457  bundle install
+  458  rails s
+  459  bundle install
+  460  bundle install
+  461  rails s
+  462  sudo brew install ssh-copy-id
+  463  brew install ssh-copy-id
+  464  ssh-copyid
+  465  ssh-copy-id
+  466  ssh-copy-id dhanexlab@192.168.88.27
+  467  ssh dhanexlab@192.168.88.27
+  468  ssh dhanexlab@192.168.88.27
+  469  ssh dhanexlab@192.168.88.27
+  470  ssh nimda@192.168.60.57
+  471  telnet 192.168.80.27 5432
+  472  telnet 192.168.80.27 5432
+  473  telnet 192.168.80.27 5432
+  474  telnet 192.168.80.27 5432
+  475  ssh dhanexlab@192.168.88.27
+  476  ssh dhanexlab@192.168.88.27
+  477  ssh dhanexlab@192.168.88.27
+  478  ssh dhanexlab@192.168.88.27
+  479  shudown -h now
+  480  sudo shutdown -h now
+  481  passwd
+  482  nano /etc/ssh/ssh_config 
+  483  nano /etc/ssh/sshd_config 
+  484  service sshd restart
+  485  service ssh restart
+  486  exit
+  487  ssh dhanexlab@192.168.88.27
+  488  ssh dhanexlab@192.168.88.27
+  489  ssh dhanexlab@192.168.88.26
+  490  ssh dhanexlab@192.168.88.26
+  491  ssh root@192.168.88.26
+  492  sudo -s
+  493  sudo /etc/init.d/sshd/res
+  494  sudo service ssh reload
+  495  service ssh restart
+  496  sudo apt-get purge openssh-server
+  497  sudo apt-get purge openssh-server
+  498  exit
+  499  ssh dhanexlab@192.168.88.26
+  500  ssh root@192.168.88.26
+  501  ssh-copy-id dhanexlab@192.168.88.26
+  502  ssh-copy-id dhanexlab@192.168.88.26
+  503  ssh dhanexlab@192.150..168.88.26
+  504  ssh dhanexlab@192.168.88.26
+  505  history
+(reverse-i-search)`openss': sudo apt-get purge openssh-server
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ 
+Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh dhanexlab@192.168.88.100
+The authenticity of host '192.168.88.100 (192.168.88.100)' can't be established.
+ECDSA key fingerprint is SHA256:D7rD85M4ulX6+APkijuxN8fzmw27NTeyHvgN053TBwk.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.88.100' (ECDSA) to the list of known hosts.
+dhanexlab@192.168.88.100's password: 
+Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.4.0-116-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+Last login: Wed Jun 20 01:00:14 2018 from 192.168.88.21
+dhanexlab@ubuntu:~$ sudo nano /etc/network/interfaces
+[sudo] password for dhanexlab: 
+
+  GNU nano 2.5.3         File: /etc/network/interfaces                          
