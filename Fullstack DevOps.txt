@@ -156,8 +156,8 @@ exec $SHELL
 rbenv install 2.5.1
 rbenv global 2.5.1
 ruby -v
-gem install bundler
-gem install rails
+sudo gem install bundler
+sudo gem install rails
 
 sudo apt-get install ruby-dev
 sudo apt-get install imagemagick
