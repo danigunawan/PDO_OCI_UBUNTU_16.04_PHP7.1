@@ -244,6 +244,13 @@ Hi excid3! You've successfully authenticated, but GitHub does not provide shell 
 - uncomment gem ini : 
 # gem 'therubyracer',  platforms: :ruby
 - bundle install
+
+## JIKA ERROR "gem install pg" not working
+
+$ sudo apt-get install postgresql-client libpq5 libpq-dev
+$ sudo gem install pg
+$ bundle install
+
 25. sudo nano /etc/nginx/sites-enabled/default
 
 - copy kan ini :
