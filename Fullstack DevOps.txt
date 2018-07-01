@@ -1162,6 +1162,8 @@ echo "Verifique o seu PHP com o comando php -m e confira se os módulo foram ins
 
 exit
 
+## ATAU JALANKAN YANG SUDAH DIBUAT install_pdo_oci.sh (INI YANG FIX ADA DI FILE install_pdo_oci.sh bukan dicatatan ini)
+
 - sudo sh install_pdo_oci.sh
 - sudo service apache2 restart
 - php -m | grep oci
