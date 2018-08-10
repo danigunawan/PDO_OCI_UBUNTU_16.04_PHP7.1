@@ -1,3 +1,8 @@
+https://itcloudnet.blogspot.com/2015/01/how-to-install-oracle-11g-r2-step-by.html
+https://www.youtube.com/watch?v=dM4ZeezZPGs
+
+https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-linx8664soft-100572.html
+
 1. install ubuntu from iso di vmware
 2. jika dari WIFI DHCP CLIENT set GUEST OS menjadi Network Adapter (Bridged Autodetect)
 3. install dengan membuat langsung user account: dhanexlab pass :29912120
