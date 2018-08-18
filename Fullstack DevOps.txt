@@ -159,7 +159,7 @@ echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
 exec $SHELL
 
 rbenv install 2.5.1
-rbenv global 2.5.1
+rbenv global 2.5.1 # jika ingin local atau perproject ruby / per direktori ruby : rbenv local 2.5.1
 ruby -v
 sudo gem install bundler
 sudo gem install rails
