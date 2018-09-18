@@ -577,6 +577,21 @@ server {
 
 - sudo service nginx restart
 
+
+## UPLOAD MAX BODY JIKA UPLOAD DI TAMBAH SIZENYA ## 
+1. buka nginx.conf
+tambahkan sehingga seperti ini
+
+
+http {
+        client_max_body_size 100000000000M;
+        ##
+        # Basic Settings
+        ##
+}
+
+
+
 ###  RAKE CACHE ###
 https://github.com/rtomayko/rack-cache
 http://rtomayko.github.io/rack-cache/
