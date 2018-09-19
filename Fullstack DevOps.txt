@@ -688,6 +688,9 @@ PORT 80 menjadi VHOST HTTP menjadi port 83 dan SSL menjadi 444 atau default 443
 - sudo service networking restart
 
 
+### CHANGE PORT APACHE 2 ###
+https://websiteforstudents.com/change-nginx-http-server-port-on-ubuntu-16-04-17-10-18-04/
+
 30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
 sudo apt-get install php7.1-pgsql
 
@@ -1253,6 +1256,106 @@ sudo service phpX.Y-fpm-sp restart
 - cek modul extension yang aktif : 
 php -m
 php -m | grep oci
+
+
+######### INSTALL LDAP WITH OPEN LDAP UBUNTU 16.04 ##########
+REFF: 
+https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-openldap-and-phpldapadmin-on-ubuntu-16-04
+https://www.youtube.com/watch?v=zNzRNgSbDPs
+https://www.linuxhelp.com/how-to-install-phpldapadmin-on-ubuntu-17-04/
+https://stackoverflow.com/questions/39786114/how-to-enable-ldap-with-php-7-0-in-ubuntu-server
+
+# CARA INSTALL LDAP DENGAN PHP OPENLDAP DI UBUNTU 16.04 #
+
+1. ifconfig lihat network yang aktif biasanya ens33
+2. ganti hostname sudo nano /etc/hostname lalu ganti dengan server.ldap.com
+3. reboot
+4. sudo apt-get install slapd ldap-utils
+5. isi password administrator 299120 dan 29912120
+6.  reset
+7. sudo nano /etc/ldap/ldap.conf 
+edit sehingga : 
+#
+# LDAP Defaults
+#
+
+# See ldap.conf(5) for details
+# This file should be world readable but not world writable.
+
+#BASE   dc=example,dc=com
+#URI    ldap://ldap.example.com ldap://ldap-master.example.com:666
+
+BASE    dc=ldap, dc=com
+URI     ldap://172.16.190.146:389
+
+#SIZELIMIT      12
+#TIMELIMIT      15
+#DEREF          never
+
+# TLS certificates (needed for GnuTLS)
+TLS_CACERT      /etc/ssl/certs/ca-certificates.crt
+
+8. sudo dpkg-reconfigure slapd
+- dns : ldap.com
+- organization : ldap.com
+- secure password : 29912120 retry : 29912120
+- DB : MDB (new storage)
+- Remove the database when slapd is purged? No
+- Move old database? Yes
+- Allow LDAPv2 protocol? No
+
+8.1 sudo ufw allow ldap
+- apt-get install php7.0-ldap (or use apt-get install php7.1-ldap )
+- service apache2 restart
+- After that create a php file to get the php configuration phpinfo();
+- Now ldap is installed.
+
+8.2 ldapwhoami -H ldap:// -x 
+ 9. reset
+10. sudo apt-get install phpldapadmin
+11. sudo nano /etc/phpldapadmin/config.php
+- CARI :
+
+$servers->setValue('server','name','Example LDAP');
+
+dengan :
+
+$servers->setValue('server','name','Dani LDAP Server');
+
+- CARI :
+ $servers->setValue('server','host','127.0.0.1');
+ganti dengan IP Host milik server :
+
+$servers->setValue('server','host','172.16.190.146'); 
+
+- CARI :
+$servers->setValue('server','base',array('dc=example,dc=com'));
+
+Ganti dengan :
+
+$servers->setValue('server','base',array('dc=ldap,dc=com'));
+
+- CARI : 
+$servers->setValue('login','bind_id','cn=admin,dc=example,dc=com');
+
+Ganti Dengan : 
+
+$servers->setValue('login','bind_id','cn=admin,dc=ldap,dc=com');
+
+- CARI : 
+// $config->custom->appearance['hide_template_warning'] = false;
+
+GANTI DENGAN : 
+
+// $config->custom->appearance['hide_template_warning'] = true;
+atau 
+$config->custom->appearance['hide_template_warning'] = true;
+
+12. sudo systemctl restart apache2
+13. http://172.16.190.146:83/phpldapadmin/
+userlogin : cn=admin,dc=ldap,dc=com
+password : 29912120
+14. create child directory
 
 ######### HISTORY #############
 Last login: Fri Jun 22 23:13:38 on console
