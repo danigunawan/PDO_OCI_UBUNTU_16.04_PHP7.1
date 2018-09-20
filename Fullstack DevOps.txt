@@ -691,6 +691,212 @@ PORT 80 menjadi VHOST HTTP menjadi port 83 dan SSL menjadi 444 atau default 443
 ### CHANGE PORT APACHE 2 ###
 https://websiteforstudents.com/change-nginx-http-server-port-on-ubuntu-16-04-17-10-18-04/
 
+## CARA INSTALL SELF SIGNED CERTIFICATE APACHE2 LARAVEL (BROWSER COMPATIBLE OR NO COMPATIBLE)
+
+REFF:
+https://stackoverflow.com/questions/50835843/apache-not-starting-with-ssl-virtualhost
+https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+
+ CREATE SELF SIGNED CERTIFICATE APACHE UBUNTU 16.04
+
+- sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:New York
+Locality Name (eg, city) []:New York City
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Bouncy Castles, Inc.
+Organizational Unit Name (eg, section) []:Ministry of Water Slides
+Common Name (e.g. server FQDN or YOUR name) []:server_IP_address
+Email Address []:admin@your_domain.com
+
+
+- sudo openssl dhparam -out /etc/ssl/certs/dhparam_apache.pem 2048
+
+- sudo nano /etc/apache2/conf-available/ssl-params.conf
+
+- isikan ssl-params.conf : 
+
+# from https://cipherli.st/
+# and https://raymii.org/s/tutorials/Strong_SSL_Security_On_Apache2.html
+
+SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
+SSLProtocol All -SSLv2 -SSLv3
+SSLHonorCipherOrder On
+# Disable preloading HSTS for now.  You can use the commented out header line that includes
+# the "preload" directive if you understand the implications.
+#Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"
+Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains"
+Header always set X-Frame-Options DENY
+Header always set X-Content-Type-Options nosniff
+# Requires Apache >= 2.4
+SSLCompression off 
+SSLSessionTickets Off
+SSLUseStapling on 
+SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
+
+SSLOpenSSLConfCmd DHParameters "/etc/ssl/certs/dhparam_apache.pem"
+
+- sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
+- sudo nano /etc/apache2/sites-available/default-ssl.conf
+
+# PILIH SALAH SATU SETINGAN :
+- SETINGAN 1 SELF SIGNED CERTIFICATE TANPA COMPABILITAS OLD BROWSER:
+
+
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+
+                DocumentRoot /var/www/html
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                SSLEngine on
+
+                SSLCertificateFile      /etc/ssl/certs/ssl-cert-snakeoil.pem
+                SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+                # BrowserMatch "MSIE [2-6]" \
+                #               nokeepalive ssl-unclean-shutdown \
+                #               downgrade-1.0 force-response-1.0
+
+        </VirtualHost>
+</IfModule>
+
+- SETINGAN 2 SELF SIGNED CERTIFICATE DENGAN COMPABILITAS OLD BROWSER:
+
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin your_email@example.com
+                ServerName server_domain_or_IP
+
+                DocumentRoot /var/www/html
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                SSLEngine on
+
+                SSLCertificateFile      /etc/ssl/certs/apache-selfsigned.crt
+                SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+                BrowserMatch "MSIE [2-6]" \
+                               nokeepalive ssl-unclean-shutdown \
+                               downgrade-1.0 force-response-1.0
+
+        </VirtualHost>
+</IfModule>
+
+- Redirect Automatis KE HTTPS
+
+sudo nano /etc/apache2/sites-available/000-default.conf
+
+
+- TAMBAHKAN FUNGSI REDIRECT SEPERTI DIBAWAH INI 
+
+<VirtualHost *:80>
+        . . .
+
+        Redirect "/" "https://your_domain_or_IP/"
+
+        . . .
+</VirtualHost>
+
+
+- sudo ufw app list
+
+Output :
+
+Apache
+  Apache Full
+  Apache Secure
+  OpenSSH
+
+- sudo ufw status
+
+
+If you allowed only regular HTTP traffic earlier, your output might look like this:
+
+Output
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere
+Apache                     ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+Apache (v6)                ALLOW       Anywhere (v6)
+
+
+- Allow Firewall
+sudo ufw allow 'Apache Full'
+sudo ufw delete allow 'Apache'
+
+
+- sudo ufw status
+
+Output
+Status: active
+
+To                         Action      From
+--                         ------      ----
+OpenSSH                    ALLOW       Anywhere
+Apache Full                ALLOW       Anywhere
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+Apache Full (v6)           ALLOW       Anywhere (v6)
+
+
+- Enable the Changes in Apache SSL
+sudo a2enmod ssl
+sudo a2enmod headers
+sudo a2ensite default-ssl
+sudo a2enconf ssl-params
+sudo apache2ctl configtest
+
+If everything is successful, you will get a result that looks like this:
+
+Output
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this message
+Syntax OK
+
+- sudo systemctl restart apache2
+
+- TES HTTPS
+https://server_domain_or_IP
+
+- Redirect Permanent
+sudo nano /etc/apache2/sites-available/000-default.conf
+
+
+ubah isi menjadi seperti ini :
+
+<VirtualHost *:80>
+        . . .
+
+        Redirect permanent "/" "https://your_domain_or_IP/"
+
+        . . .
+</VirtualHost>
+
+
+- sudo apache2ctl configtest
+- sudo systemctl restart apache2
+
 30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
 sudo apt-get install php7.1-pgsql
 
