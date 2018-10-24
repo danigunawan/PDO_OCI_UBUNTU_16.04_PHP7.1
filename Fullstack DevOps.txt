@@ -1,6 +1,6 @@
 https://itcloudnet.blogspot.com/2015/01/how-to-install-oracle-11g-r2-step-by.html
 https://www.youtube.com/watch?v=dM4ZeezZPGs
-
+https://gorails.com/deploy/ubuntu/16.04
 https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-linx8664soft-100572.html
 
 1. install ubuntu from iso di vmware
