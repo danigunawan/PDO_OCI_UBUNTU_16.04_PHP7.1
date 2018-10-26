@@ -950,7 +950,7 @@ extension=pdo_sqlsrv.so
 - buat file sqlsrv.ini di /etc/php/7.1/mods-available dan isikan :
 ; configuration for php mysql module
 ; priority=20
-extension=pdo_sqlsrv.so
+extension=sqlsrv.so
 - aktifkan modul sqlsrv dan pdo_sqlsrv
 sudo phpenmod sqlsrv
 sudo phpenmod pdo_sqlsrv
