@@ -900,6 +900,8 @@ ubah isi menjadi seperti ini :
 30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
 sudo apt-get install php7.1-pgsql
 
+cek pdo :
+php -m | grep sqlsrv
 ########## SQLSRV MSSQL MSODBC########
 
 
