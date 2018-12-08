@@ -897,6 +897,53 @@ ubah isi menjadi seperti ini :
 - sudo apache2ctl configtest
 - sudo systemctl restart apache2
 
+## TAMBAHAN PORT 80, 8080 dan SSL 443 dalam satu SERVER
+
+<VirtualHost *:80>
+    ServerName yourdomain.tld
+
+    ServerAdmin webmaster@localhost
+    #DocumentRoot /var/www/html/your-project/public
+     DocumentRoot /var/www/html/spysi
+
+    #<Directory /var/www/html/your-project>
+     <Directory /var/www/html/spysi>
+      AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+<VirtualHost *:8080>
+    ServerName yourdomain.tld
+
+    ServerAdmin webmaster@localhost
+    #DocumentRoot /var/www/html/apphbb
+     DocumentRoot /var/www/html/apphbb
+
+    #<Directory /var/www/html/your-project>
+     <Directory /var/www/html/apphbb>
+      AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+## ini setingan dani mas obi ssl cert udah di copy di dir etc/ssl/geotrust ting$
+<VirtualHost *:443>
+DocumentRoot /var/www/html/apphbb/
+ServerName hbb.pgn-solution.co.id
+SSLEngine on
+SSLCertificateFile /etc/ssl/geotrust/ServerCertificate.cer
+SSLCertificateKeyFile /etc/ssl/geotrust/commercialnew.key
+#SSLCACertificateFile /etc/ssl/certs/CACertificate-INTERMEDIATE-1.cer
+</VirtualHost>
+
+
+
 30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
 sudo apt-get install php7.1-pgsql
 
