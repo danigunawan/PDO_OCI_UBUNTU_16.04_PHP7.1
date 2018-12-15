@@ -423,6 +423,12 @@ require 'capistrano/passenger'
 
 - run cap production deploy
 
+
+### INSTALL CAPYBARA WEBKIT ###
+Installing Qt and compiling capybara webkit
+
+https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit#macos-high-sierra-1013-macos-sierra-1012-el-capitan-1011-and-yosemite-1010
+
 28. IMSTALL SSL / SSL SELF SIGNED 
 REFF: https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
 
