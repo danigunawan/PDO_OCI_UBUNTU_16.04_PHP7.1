@@ -2,6 +2,7 @@ https://itcloudnet.blogspot.com/2015/01/how-to-install-oracle-11g-r2-step-by.htm
 https://www.youtube.com/watch?v=dM4ZeezZPGs
 https://gorails.com/deploy/ubuntu/16.04
 https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-linx8664soft-100572.html
+https://gist.github.com/artiwarahd/8f0e3c7cca8c32db5614b5107c85d82d
 
 1. install ubuntu from iso di vmware
 2. jika dari WIFI DHCP CLIENT set GUEST OS menjadi Network Adapter (Bridged Autodetect)
