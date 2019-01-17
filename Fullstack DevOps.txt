@@ -1638,8 +1638,11 @@ sudo chmod 1777 -R /home/<my_name>/target direktori
 and
 sudo chmod 1777 -R /tmp
 
+2. Permission denied - /.bundle (Errno::EACCES) when executing rails-composer using the conventional approach #138
+https://github.com/RailsApps/rails-composer/issues/138
+chown your_username /Users/spaceodyssey/Desktop/hipster -R
 
-igunawan$ ssh dhanexlab@192.168.88.26
+danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ history
     6  bundle env
