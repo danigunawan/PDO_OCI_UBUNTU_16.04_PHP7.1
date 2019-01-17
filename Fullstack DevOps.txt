@@ -1630,13 +1630,16 @@ Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
 /usr/local/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/Users/danigunawan/.ssh/id_rsa.pub"
 
+## TROUBLE SHOOT ##
+1. Permission denied when running Bundle Install. #5211
+Reference : https://github.com/bundler/bundler/issues/5211
+Solution :
+sudo chmod 1777 -R /home/<my_name>/target direktori
+and
+sudo chmod 1777 -R /tmp
 
 
-
-^C
-Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh dhanexlab@192.150..168.88.26
-ssh: Could not resolve hostname 192.150..168.88.26: -65540
-Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh dhanexlab@192.168.88.26
+igunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ history
     6  bundle env
