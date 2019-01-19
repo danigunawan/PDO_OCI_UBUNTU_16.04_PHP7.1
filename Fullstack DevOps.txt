@@ -173,6 +173,12 @@ sudo apt-get install elasticsearch
 sudo apt-get install wkhtmltopdf
 rbenv rehash
 
+# CHANGE rbenv 2.5.1 to 2.3.3
+
+rbenv install 2.3.3
+rbenv global 2.3.3 atau rbenv local 2.3.3 # specific project
+rbenv rehash # setiap pergantian env ruby version harus di rehash 
+
 22. INSTALL NGINX + PASSENGER
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
 sudo apt-get install -y apt-transport-https ca-certificates
