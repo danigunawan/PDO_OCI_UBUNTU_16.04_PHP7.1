@@ -637,6 +637,7 @@ tambahkan :
 gem 'rack-cache'
 
 - bundle install
+- bundle env # check package gems on your project
 - sudo service nginx restart
 
 
