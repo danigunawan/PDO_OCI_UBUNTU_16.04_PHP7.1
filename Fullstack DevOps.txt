@@ -136,6 +136,7 @@ port : 3306
 18. sudo apt-get install mc
 19. sudo apt-get install vim
 20. sudo apt-get install curl
+sudo apt-get install htop # htop untuk kill process/monitoring
 
 21. INSTALL DEPLOY RUBY ON RAILS
 
