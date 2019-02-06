@@ -4,6 +4,7 @@ https://gorails.com/deploy/ubuntu/16.04
 https://www.oracle.com/technetwork/database/enterprise-edition/downloads/112010-linx8664soft-100572.html
 https://gist.github.com/artiwarahd/8f0e3c7cca8c32db5614b5107c85d82d
 
+
 1. install ubuntu from iso di vmware
 2. jika dari WIFI DHCP CLIENT set GUEST OS menjadi Network Adapter (Bridged Autodetect)
 3. install dengan membuat langsung user account: dhanexlab pass :29912120
@@ -12,6 +13,14 @@ https://gist.github.com/artiwarahd/8f0e3c7cca8c32db5614b5107c85d82d
 - di mac brew install ssh-copy-id # agar fungsi tidak masukan password lagi
 ssh-copy-id dhanexlab@192.168.88.100
 6. sudo nano /etc/network/interfaces
+
+# Change root password
+
+    sudo -i
+    passwd
+    sudo passwd root
+    su -
+
 
 # isikan :
 
@@ -137,6 +146,7 @@ port : 3306
 19. sudo apt-get install vim
 20. sudo apt-get install curl
 sudo apt-get install htop # htop untuk kill process/monitoring
+sudo apt-get install snap
 
 21. INSTALL DEPLOY RUBY ON RAILS
 
@@ -1678,6 +1688,24 @@ chown your_username /Users/spaceodyssey/Desktop/hipster -R
 3. rbenv install 2.3.3 error build 
 kasus karena ruby 2.3.3 tidak support openssl 1.1.1
 harus di downgrade ke versi : OpenSSL 1.0.2g-fips  1 Mar 2016
+
+4. install webmin error
+https://sourceforge.net/p/webadmin/discussion/600155/thread/0464291017/
+
+ HTTP/1.0 500 Perl execution failed Server: MiniServ/1.900 Date: Wed, 28 Nov 2018 11:52:16 GMT Content-type: text/html; Charset=iso-8859-1 Connection: close
+
+Solution : 
+- buka webmin
+- ALT + K
+- paste : 
+curl https://raw.githubusercontent.com/webmin/webmin/5d0bd909f0bfe45092ab783f95e4e989e5ed8b8f/package-updates/package-updates-lib.pl | cat > /usr/share/webmin/package-updates/package-updates-lib.pl
+- coba install lagi postgresqlnya / lainnya
+
+5. replace_gem: Error loading the 'sqlite3' Active Record adapter - while creating model
+https://stackoverflow.com/questions/54529739/replace-gem-error-loading-the-sqlite3-active-record-adapter-while-creating
+Solution : 
+
+gem 'sqlite3', '~> 1.3.6
 
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
