@@ -1675,6 +1675,10 @@ sudo chmod 1777 -R /tmp
 https://github.com/RailsApps/rails-composer/issues/138
 chown your_username /Users/spaceodyssey/Desktop/hipster -R
 
+3. rbenv install 2.3.3 error build 
+kasus karena ruby 2.3.3 tidak support openssl 1.1.1
+harus di downgrade ke versi : OpenSSL 1.0.2g-fips  1 Mar 2016
+
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ history
