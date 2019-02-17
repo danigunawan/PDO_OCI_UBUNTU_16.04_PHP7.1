@@ -65,7 +65,7 @@ PermitRootLogin yes # menjadi yes
 13. sudo ufw allow 22 #allow port ssh server
 14. install webmin 
 REFF: https://www.digitalocean.com/community/tutorials/how-to-install-webmin-on-ubuntu-16-04
-
+https://www.digitalocean.com/community/tutorials/how-to-install-webmin-on-ubuntu-18-04 # FOR 18.04
 - sudo nano /etc/apt/sources.list
 masukan : 
 deb http://download.webmin.com/download/repository sarge contrib
@@ -147,6 +147,35 @@ port : 3306
 20. sudo apt-get install curl
 sudo apt-get install htop # htop untuk kill process/monitoring
 sudo apt-get install snap
+sudo apt-get install synaptic
+sudo apt-get install rar unrar
+sudo apt-get install anydesk #https://websiteforstudents.com/how-to-install-anydesk-on-ubuntu-16-04-17-10-18-04-desktop/ | https://tecadmin.net/install-anydesk-ubuntu/
+
+# ERROR INSTALL POSTGRESQL / MYSQL DI WEBMIN
+Undefined subroutine &package_updates::update_system_install called at ./package-updates-lib.pl line 391. 
+
+https://sourceforge.net/p/webadmin/discussion/600155/thread/0464291017/
+https://idnetter.com/mengatasi-perl-execution-failed-server-webmin/
+
+SOLUSI :
+1. buka webmin di web
+2. ALT + K (buka terminal di web)
+3. paste ini : 
+# UBUNTU / DEB
+curl https://raw.githubusercontent.com/webmin/webmin/5d0bd909f0bfe45092ab783f95e4e989e5ed8b8f/package-updates/package-updates-lib.pl | cat > /usr/share/webmin/package-updates/package-updates-lib.pl
+
+#CENTOS/FEDORA
+curl https://raw.githubusercontent.com/webmin/webmin/5d0bd909f0bfe45092ab783f95e4e989e5ed8b8f/package-updates/package-updates-lib.pl | cat > /usr/libexec/webmin/package-updates/package-updates-lib.pl
+
+4. install kembali postgresql / mysql
+KET : JANGAN LUPA INSTALL CURL 
+
+ubuntu :
+apt-get -y install curl
+
+RHEL/CENTOS :
+
+yum -y install curl
 
 21. INSTALL DEPLOY RUBY ON RAILS
 
@@ -1706,6 +1735,47 @@ https://stackoverflow.com/questions/54529739/replace-gem-error-loading-the-sqlit
 Solution : 
 
 gem 'sqlite3', '~> 1.3.6
+
+6. Google Chrome redirecting localhost to https
+HTTP parse error, malformed request (): #<Puma::HttpParserError: Invalid HTTP format, parsing fails. #1128 
+
+Solution : https://stackoverflow.com/questions/25277457/google-chrome-redirecting-localhost-to-https/28586593#28586593
+https://cheapsslsecurity.com/blog/hsts-chrome-firefox-clear-hsts-settings/
+
+# CHROME
+- chrome://net-internals/#hsts
+- lalu pada bagian Delete domain security policies
+masukan localhost lalu klik delete
+
+
+# FIREFOX
+First, you need to close all open windows
+Open the browsing history by pressing Ctrl + Shift + H (Cmd + Shift + H on Mac)
+Go to the site for which you want to clear HSTS settings
+Now right-click on that site and then click on Forget About This Site. Keep in mind that this will clear all data of the site present in Firefox.
+
+7. Ubuntu Software Center Missing app
+
+sudo apt install software-center
+sudo apt install gnome-center
+
+8. AppStream Error in Ubuntu 16.04 Xenial
+https://administratosphere.wordpress.com/2016/12/25/appstream-error-in-ubuntu-16-04-xenial/
+https://askubuntu.com/questions/1053830/problem-updating-in-ubuntu-e-problem-executing-scripts-aptupdatepost-invok
+https://askubuntu.com/questions/942895/e-problem-executing-scripts-aptupdatepost-invoke-success
+
+sudo apt install appstream/xenial-backports
+appstreamcli —version
+
+AppStream CLI tool version: 0.10.1
+sudo appstreamcli refresh —force
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get autoremove
+
+9. install wine 
+langsung dari ubuntu sotfware center
+
 
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
