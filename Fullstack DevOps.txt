@@ -84,10 +84,10 @@ deb http://download.webmin.com/download/repository sarge contrib
 jadi nanti login superuser dengan akun user : postgres dan password : postgres
 - Save
 - sudo ufw allow 5432
-- sudo nano etc/postgresql/9.5/main/postgresql.conf
+- sudo nano /etc/postgresql/9.5/main/postgresql.conf
 ubah listen_addresses menjadi : 
 listen_addresses = '*' # what IP address(es) to listen on;
-- lalu buka sudo nano etc/postgresql/9.5/main/pg_hba.conf
+- lalu buka sudo nano /etc/postgresql/9.5/main/pg_hba.conf
 # tambahkan di line paling bawah :
 host	 all		 all		 0.0.0.0/0		 md5
 - Sudo Service postgresql restart 
@@ -172,7 +172,7 @@ KET : JANGAN LUPA INSTALL CURL
 
 ubuntu :
 apt-get -y install curl
-
+t p
 RHEL/CENTOS :
 
 yum -y install curl
@@ -202,7 +202,10 @@ exec $SHELL
 rbenv install 2.5.1
 rbenv global 2.5.1 # jika ingin local atau perproject ruby / per direktori ruby : rbenv local 2.5.1
 ruby -v
+
+# https://bundler.io/compatibility.html
 sudo gem install bundler
+
 sudo gem install rails
 
 sudo apt-get install ruby-dev
@@ -302,6 +305,14 @@ Hi excid3! You've successfully authenticated, but GitHub does not provide shell 
 $ sudo apt-get install postgresql-client libpq5 libpq-dev
 $ sudo gem install pg
 $ bundle install
+
+## CHECK ENV ##
+bundle env
+bundle --full-index
+
+
+## BUNDLE CONFIG ##
+bundle config
 
 25. sudo nano /etc/nginx/sites-enabled/default
 
@@ -813,7 +824,7 @@ SSLSessionTickets Off
 SSLUseStapling on 
 SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 
-SSLOpenSSLConfCmd DHParameters "/etc/ssl/certs/dhparam_apache.pem"
+SSLOpenSSLConfCmd DHParameters "/etc/ssl/certs/dasdsadhparam_apache.pem"
 
 - sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf.bak
 - sudo nano /etc/apache2/sites-available/default-ssl.conf
@@ -1718,6 +1729,101 @@ chown your_username /Users/spaceodyssey/Desktop/hipster -R
 kasus karena ruby 2.3.3 tidak support openssl 1.1.1
 harus di downgrade ke versi : OpenSSL 1.0.2g-fips  1 Mar 2016
 
+https://www.openssl.org/source/old/1.0.2/
+
+CARA BUILD INSTALL 1.0.2
+https://stackoverflow.com/questions/51560964/how-to-upgrade-openssl-from-1-0-2g-to-1-1-0g-in-ubuntu-and-let-python-recognize
+https://askubuntu.com/questions/1102803/upgrade-openssl-1-1-0-to-1-1-1-in-ubuntu-18-04
+https://github.com/rbenv/ruby-build/issues/1146
+
+CARA 1 : 
+wget https://www.openssl.org/source/old/1.0.2/openssl-1.0.2g.tar.gz
+tar xzvf openssl-1.0.2g.tar.gz
+cd openssl-1.1.0g
+./config
+make
+sudo make install
+
+openssl version -a
+
+CARA 2 :
+wget https://www.openssl.org/source/old/1.0.2/openssl-1.0.2g.tar.gz
+tar xzvf openssl-1.0.2g.tar.gz
+cd openssl-1.0.2g
+./config
+make
+make test
+sudo make install
+sudo mv /usr/bin/openssl ~/tmp
+sudo ln -s /usr/local/bin/openssl /usr/bin/openssl
+
+openssl version -a
+
+CARA 3: 
+
+REFF: 
+https://dmitryrck.com/install-ruby-2-3-x-in-linux/
+https://github.com/postmodern/ruby-install
+- wget -O ruby-install-0.7.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz
+- tar -xzvf ruby-install-0.7.0.tar.gz
+- cd ruby-install-0.7.0/
+- sudo make install
+- INTEGRATION WITH RBENV :
+ruby-install --install-dir ~/.rbenv/versions/2.3.3 ruby 2.3.3
+
+## RUBY FINDING OPENSSL VERSION
+https://stackoverflow.com/questions/15907103/ruby-not-finding-new-version-of-openssl
+
+$ ruby -ropenssl -e'puts OpenSSL::OPENSSL_VERSION'
+OpenSSL 1.0.2e 3 Dec 2015
+$ /usr/local/opt/openssl/bin/openssl version
+OpenSSL 1.0.2g  1 Mar 2016
+$ strings {{redacted}/ruby-2.3.0/lib/ruby/2.3.0/x86_64-darwin15/openssl.bundle | grep '1.0.2'
+OpenSSL 1.0.2e 3 Dec 2015
+$ otool -L {{redacted}}/ruby-2.3.0/lib/ruby/2.3.0/x86_64-darwin15/openssl.bundle
+{{redacted}}/ruby-2.3.0/lib/ruby/2.3.0/x86_64-darwin15/openssl.bundle:
+        {{redacted}}/ruby-2.3.0/lib/libruby.2.3.0.dylib (compatibility version 2.3.0, current version 2.3.0)
+        /usr/local/opt/openssl/lib/libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+        /usr/local/opt/openssl/lib/libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+        /usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.5)
+        /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1226.10.1)
+        /usr/local/opt/gmp/lib/libgmp.10.dylib (compatibility version 14.0.0, current version 14.0.0)
+        /usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
+
+CARA 4 : 
+https://www.howtoinstall.co/en/ubuntu/xenial/libruby2.3
+https://github.com/postmodern/ruby-install/issues/287
+sudo apt-get update
+sudo apt-get install libruby2.3
+
+sudo apt-get remove libssl-dev
+sudo apt-get remove libssl1.1-dev
+sudo apt-get remove libssl1.1
+
+sudo apt-get install libssl1.0-dev
+sudo apt-get install libssl1.0
+
+ruby-install ruby --no-install-deps 2.3.7
+
+rbenv : 
+https://github.com/postmodern/ruby-install/
+
+ruby-install --install-dir ~/.rbenv/versions/2.3.3 ruby --no-install-deps 2.3.3
+
+CARA 5 (FIX BISA) :
+Stuck downgrading libssl on Ubuntu 16.04
+https://stackoverflow.com/questions/47957026/stuck-downgrading-libssl-on-ubuntu-16-04
+
+REMOVE VERSI CURRENT :
+sudo apt-get remove libssl-dev
+
+CHECK :
+sudo apt-cache policy libssl-dev
+
+LALU INSTALL SESUAI VERSI :
+sudo apt-get install libssl-dev=1.0.2g-1ubuntu4.15
+sudo apt-get install libpq-dev
+
 4. install webmin error
 https://sourceforge.net/p/webadmin/discussion/600155/thread/0464291017/
 
@@ -1776,6 +1882,69 @@ sudo apt-get autoremove
 9. install wine 
 langsung dari ubuntu sotfware center
 
+10. install rbenv 2.3.x not support openssl 1.1.1a but support for openssl 1.0.2g
+https://github.com/rbenv/ruby-build/wiki#openssl-usrincludeopensslasn1_mach102-error-error-this-file-is-obsolete-please-update-your-software
+https://github.com/rvm/rvm/issues/3958
+
+BUILD FAILED (Ubuntu 16.04 using ruby-build 20190130-4-g0e33b11)
+
+Inspect or clean up the working tree at /tmp/ruby-build.20190219215609.21603
+Results logged to /tmp/ruby-build.20190219215609.21603.log
+
+Last 10 log lines:
+installing rdoc:              /home/danigunawan/.rbenv/versions/2.3.3/share/ri/2.3.0/system
+installing capi-docs:         /home/danigunawan/.rbenv/versions/2.3.3/share/doc/ruby
+The Ruby openssl extension was not compiled.
+ERROR: Ruby install aborted due to missing extensions
+Try running `apt-get install -y libssl-dev` to fetch missing dependencies.
+
+Configure options used:
+  --prefix=/home/danigunawan/.rbenv/versions/2.3.3
+  LDFLAGS=-L/home/danigunawan/.rbenv/versions/2.3.3/lib 
+  CPPFLAGS=-I/home/danigunawan/.rbenv/versions/2.3.3/include 
+
+SOLUSI : 
+
+coba install dengan ruby versi 2.4.0 keatas bukan 2.3.x karena tidak support openssl 1.1.0 melainkan 1.0.2g
+
+11. FATAL: Listen error: unable to monitor directories for changes.
+https://prashantrorblog.wordpress.com/2016/05/28/fatal-listen-error-unable-to-monitor-directories-for-changes/
+http://ankitbparekh.blogspot.com/2016/02/gurad-fatal-listen-error.html
+
+Solusi : 
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+
+12. Could not find a valid gem 'bundler' (>= 0) in any repository
+https://stackoverflow.com/questions/9962051/could-not-find-a-valid-gem-in-any-repository-rubygame-and-others/9962076#9962076
+
+solution : gem source -a https://rubygems.org/
+
+13. /home/danigunawan/.rbenv/rbenv.d/exec/gem-rehash/rubygems_plugin.rb:6: warning: Insecure world writable dir /home/danigunawan/PGASOL in PATH, mode 040777
+https://stackoverflow.com/questions/5380671/getting-the-warning-insecure-world-writable-dir-home-chance-in-path-mode-04
+
+chmod go-w /home/danigunawan/PGASOL
+
+14. Current Bundler version:
+    bundler (2.0.1)
+This Gemfile requires a different version of Bundler.
+Perhaps you need to update Bundler by running `gem install bundler`?
+
+Could not find gem 'bundler (>= 1.3.0, < 2.0)', which is required by gem 'rails
+(= 4.2.1)', in any of the sources.
+
+SOLUSI :
+karena versi terbaru bundler 2.0.1 tidak support beberapa gem maka kita turunkan/downgrade
+
+https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-must-use-bundler-2-or-greater
+
+- gem uninstall bundler
+- gem install bundler -v 1.17.3
+- bundle install 
+
+###BLOG###
+http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220
+###BLOG###
 
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
