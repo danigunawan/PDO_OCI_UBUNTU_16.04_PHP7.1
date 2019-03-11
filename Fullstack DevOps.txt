@@ -55,7 +55,7 @@ sudo ifup ens33
 9. ifconfig # pastikan sudah sesuai interfaces diatas
 10. sudo apt-get update 
 sudo apt-get upgrade
-11. sudo apt-get install openssh server
+11. sudo apt-get install openssh-server
 12. sudo nano /etc/ssh/sshd_config
 
 - ubah  :
