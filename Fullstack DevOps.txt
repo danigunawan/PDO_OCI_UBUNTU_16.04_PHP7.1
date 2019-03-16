@@ -1949,6 +1949,46 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
 - gem install bundler -v 1.17.3
 - bundle install 
 
+15. Errors were encountered while processing:
+    mysql-server-5.7
+    mysql-server
+    E: Sub-process /usr/bin/dpkg returned an error code (1)
+
+    CARA 1
+    Solusi : 
+
+    https://askubuntu.com/questions/873248/mysql-installation-stuck-on-ubuntu-16-04-no-root-user-privilege
+    https://askubuntu.com/questions/640899/how-do-i-uninstall-mysql-completely
+    https://websiteforstudents.com/install-mysql-8-0-on-ubuntu-16-04-17-10-18-04/
+    https://askubuntu.com/questions/825579/upgrading-to-mysql-5-7-15-crashes-on-ubuntu-16-04
+    https://itsfoss.com/could-not-get-lock-error/
+    https://linuxscriptshu b.com/uninstall-completely-remove-mysql-ubuntu-16-04/
+    https://askubuntu.com/questions/789686/dpkg-error-processing-package-mysql-server-configure
+    https://askubuntu.com/questions/265685/how-to-reinstall-mysql
+    https://www.digitalocean.com/community/questions/job-for-mysqld-service-failed-see-systemctl-status-mysqld-service-journalctl-xe-tail-30-var-log-mysql-error-log
+    https://askubuntu.com/questions/1029162/mysql-installation-problems-with-18-04
+    https://unix.stackexchange.com/questions/389747/error-processing-package-mysql-community-server-during-apt-get-upgrade
+    https://askubuntu.com/questions/760724/16-04-upgrade-broke-mysql-server
+    https://askubuntu.com/questions/766038/error-installing-mysql-on-ubuntu-16-04
+    https://askubuntu.com/questions/760724/16-04-upgrade-broke-mysql-server
+    https://ubuntuforums.org/showthread.php?t=1763604&page=2
+    https://ubuntuforums.org/showthread.php?t=2325143
+    https://askubuntu.com/questions/763534/cannot-reinstall-mysql-server-after-its-purge
+    https://serverfault.com/questions/808304/install-of-mysql-hangs-on-ubuntu-16-04
+    https://askubuntu.com/questions/763534/cannot-reinstall-mysql-server-after-its-purge
+    https://askubuntu.com/questions/883597/install-mysql-server-in-ubuntu-16-10-no-window-to-set-root-passowrd-during-ins
+
+    - CARA 2
+    Solusi (Jika Cara 1 Gagal)
+    install mariadb :
+    https://www.linuxbabe.com/linux-server/install-apache-mariadb-and-php7-lamp-stack-on-ubuntu-16-04-lts
+    sudo apt-get install mariadb-server mariadb-client
+    systemctl status mysql
+    sudo systemctl start mysql
+    sudo systemctl enable mysql
+    sudo mysql_secure_installation
+
+
 ###BLOG###
 http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220
 ###BLOG###
