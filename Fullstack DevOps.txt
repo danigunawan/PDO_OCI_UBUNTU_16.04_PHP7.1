@@ -1962,7 +1962,7 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
     https://websiteforstudents.com/install-mysql-8-0-on-ubuntu-16-04-17-10-18-04/
     https://askubuntu.com/questions/825579/upgrading-to-mysql-5-7-15-crashes-on-ubuntu-16-04
     https://itsfoss.com/could-not-get-lock-error/
-    https://linuxscriptshu b.com/uninstall-completely-remove-mysql-ubuntu-16-04/
+    https://linuxscriptshur b.com/uninstall-completely-remove-mysql-ubuntu-16-04/
     https://askubuntu.com/questions/789686/dpkg-error-processing-package-mysql-server-configure
     https://askubuntu.com/questions/265685/how-to-reinstall-mysql
     https://www.digitalocean.com/community/questions/job-for-mysqld-service-failed-see-systemctl-status-mysqld-service-journalctl-xe-tail-30-var-log-mysql-error-log
@@ -1988,6 +1988,37 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
     sudo systemctl enable mysql
     sudo mysql_secure_installation
 
+    # MARIADB NOT CONNECT NAVICAT OR SQLYOG / more# CARA 1 (BISA)
+    https://stackoverflow.com/questions/39281594/error-1698-28000-access-denied-for-user-rootlocalhost
+
+    sudo mysql -u root
+    USE mysql;
+    SELECT User, Host, plugin FROM mysql.user;
+    UPDATE user SET plugin='mysql_native_password' WHERE User='root';
+    FLUSH PRIVILEGES;
+    exit;
+    service mysql restart
+    
+    Coba connect pastikan berhasil
+
+
+    # MARIADB NOT CONNECT NAVICAT OR SQLYOG / more# CARA 2 (BISA)
+    # MARIADB NOT CONNECT NAVICAT OR SQLYOG / more
+
+    sudo mysql -u root
+
+    USE mysql;
+    CREATE USER 'YOUR_SYSTEM_USER'@'localhost' IDENTIFIED BY '';
+    GRANT ALL PRIVILEGES ON *.* TO 'YOUR_SYSTEM_USER'@'localhost';
+    UPDATE user SET plugin='auth_socket' WHERE User='YOUR_SYSTEM_USER';
+    FLUSH PRIVILEGES;
+    exit;
+
+      service mysql restart
+
+    Coba connect pastikan berhasil
+
+    YOUR_SYSTEM_USER adalah nama username komputer misal danigunawan
 
 ###BLOG###
 http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220
