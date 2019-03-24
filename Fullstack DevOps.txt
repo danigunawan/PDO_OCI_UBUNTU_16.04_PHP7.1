@@ -2019,6 +2019,62 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
     Coba connect pastikan berhasil
 
     YOUR_SYSTEM_USER adalah nama username komputer misal danigunawan
+  
+  16. MULTIPLE WEBSITE NOT SAME PORTS APACHE2
+  https://serverfault.com/questions/219261/declaring-multiple-ports-for-the-same-virtualhosts
+  https://support.rackspace.com/how-to/serve-multiple-domains-by-using-virtual-hosts/
+  https://www.digitalocean.com/community/questions/ubuntu-16-04-apache2-multiple-websites
+  https://stackoverflow.com/questions/10763234/multiple-domain-with-the-same-ip-and-port-in-apache
+
+##### LARAVEL ######
+#<VirtualHost *:80>
+<VirtualHost *:81>
+    ServerName yourdomain.tld
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/your-project/public
+
+    <Directory /var/www/html/your-project>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+#### END LARAVEL ####
+
+
+
+#### APPS ####
+Listen 82
+NameVirtualHost *:82
+
+  etc/apache2/sites-available/laravel.conf :
+
+  <VirtualHost *:82>
+    ServerName yourdomain.tld
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+#### END APPS ####
+
+
+17. Mar 23 00:27:06 danigunawan-dsc systemd[1]: Failed to start LSB: Apache2 web server.
+https://askubuntu.com/questions/870356/apache-problem-failed-to-start-lsb-apache2-web-server
+
+Solution : 
+sudo apache2ctl configtest
+
 
 ###BLOG###
 http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220
