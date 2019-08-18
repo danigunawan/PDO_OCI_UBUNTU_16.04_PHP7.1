@@ -1,0 +1,9 @@
+REFF:
+https://www.youtube.com/watch?v=yfYq4_a_juU
+https://musaamin.web.id/cara-replikasi-database-mariadb-10-master-master-di-ubuntu-16-04/
+
+1. lsb_release -cd; getconf LONG_BIT; hostname -I
+2. sudo apt-get install mariadb-server mariadb-client -y
+3. 
+
+

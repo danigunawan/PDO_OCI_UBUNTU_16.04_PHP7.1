@@ -152,7 +152,12 @@ port : 3306
 18. sudo apt-get install mc
 19. sudo apt-get install vim
 20. sudo apt-get install curl
-sudo apt-get install htop # htop untuk kill process/monitoring
+sudo apt-get install htop # htop atau top untuk kill process/monitoring
+sudo apt-get install glances # glances
+
+# How to Find a Process Name Using PID Number in Linux
+https://www.tecmint.com/find-process-name-pid-number-linux/
+
 sudo apt-get install snap
 sudo apt-get install synaptic
 sudo apt-get install rar unrar
@@ -522,6 +527,8 @@ https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-c
 28. IMSTALL SSL / SSL SELF SIGNED 
 REFF: https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-16-04
 
+https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04 
+
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt
 
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
@@ -738,8 +745,11 @@ sudo apt-get upgrade
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install php7.1 php7.1-mcrypt php7.1-xml php7.1-gd php7.1-opcache php7.1-mbstring
-apt install php7.1 php7.1-xml php7.1-mbstring php7.1-mysql php7.1-json php7.1-curl php7.1-cli php7.1-common php7.1-mcrypt php7.1-gd libapache2-mod-php7.1 php7.1-zip
+sudo apt install php7.1-gmp php7.1-imap php7.1 php7.1-xml php7.1-mbstring php7.1-mysql php7.1-json 
+sudo apt-get install php7.1-curl php7.1-cli php7.1-bcmath php7.1-common php7.1-mcrypt php7.1-gd 
+sudo apt-get install libapache2-mod-php7.1 php7.1-zip
 sudo apt-get install apache2 libapache2-mod-php7.1
+sudo apt-get install php7.1-fpm
 cd /tmp
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
@@ -747,6 +757,40 @@ cd /var/www/html
 sudo composer create-project laravel/laravel your-project --prefer-dist
 sudo chgrp -R www-data /var/www/html/your-project
 sudo chmod -R 775 /var/www/html/your-project/storage
+
+
+# UNTUK PHP 7.2
+https://www.rosehosting.com/blog/install-php-7-1-with-nginx-on-an-ubuntu-16-04-vps/
+sudo apt-get install php7.2 php7.2-mcrypt php7.2-xml php7.2-gd php7.2-opcache php7.2-mbstring
+sudo apt install php7.2-gmp php7.2-imap php7.2 php7.2-xml php7.2-mbstring php7.2-mysql php7.2-json 
+sudo apt-get install php7.2-curl php7.2-cli php7.2-bcmath php7.2-common php7.2-mcrypt php7.2-gd 
+sudo apt-get install libapache2-mod-php7.2 php7.2-zip
+sudo apt-get install apache2 libapache2-mod-php7.2
+sudo apt-get install php7.2-fpm
+sudo apt-get install php7.2-mysql
+
+sudo apt-get install php7.2 php7.2-cli php7.2-common php7.2-json php7.2-opcache php7.2-mysql php7.2-mbstring php7.2-mcrypt php7.2-zip php7.2-fpm
+
+
+### OPTIONAL JIKA INGIN ISI SEMUA DARI VAR/WWW BISA WRITABLE RENAME, DELETE DLL FULL ACCESS ###
+Reff : 
+https://askubuntu.com/questions/767504/permissions-problems-with-var-www-html-and-my-own-home-directory-for-a-website
+
+sudo chgrp -R www-data /var/www/html
+sudo find /var/www/html -type d -exec chmod g+rx {} +
+sudo find /var/www/html -type f -exec chmod g+r {} +
+
+sudo chown -R danigunawan /var/www/html/
+sudo find /var/www/html -type d -exec chmod u+rwx {} +
+sudo find /var/www/html -type f -exec chmod u+rw {} +
+
+sudo find /var/www/html -type d -exec chmod g+s {} +
+
+sudo chmod -R o-rwx /var/www/html/
+
+### OPTIONAL JIKA INGIN ISI SEMUA DARI VAR/WWW BISA WRITABLE RENAME, DELETE DLL FULL ACCESS ###
+
+
 cd /etc/apache2/sites-available
 - sudo nano laravel.conf
 isikan :
@@ -1043,6 +1087,7 @@ SSLCertificateKeyFile /etc/ssl/geotrust/commercialnew.key
 
 30. PAKET PHP + PDO (OCI, SQLSRV, DBLIB, PDO_OCI, PDO_PGSQL, PDO_SQLITE, PDO_MYSQL)
 sudo apt-get install php7.1-pgsql
+sudo apt-get install php7.1-sqlite3
 
 cek pdo :
 php -m | grep sqlsrv
@@ -1720,6 +1765,150 @@ Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ ssh-copy-id dhanexlab@192.168.88.26
 /usr/local/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/Users/danigunawan/.ssh/id_rsa.pub"
 
+
+### INSTALL PHPLDAP + OPENLDAP DOCKER (REKOMENDASI) ###
+https://github.com/osixia/docker-phpLDAPadmin#quick-start
+https://github.com/osixia/docker-phpLDAPadmin/issues/16
+https://www.howtoforge.com/linux_openldap_setup_server_client
+
+Create Grup Account LDAP : 
+https://www.youtube.com/watch?v=MMtZzVW310g&t=407s
+
+1. sudo docker run -p 6443:443 \
+        --env PHPLDAPADMIN_LDAP_HOSTS=127.0.0.1 \
+        --detach osixia/phpldapadmin:0.7.2
+
+        atau (lihat di etc/hosts 127.0.0.1 mengarah ke alias mana misal danigunawan.com)
+        sehingga :
+
+   sudo docker run -p 6443:443 \
+        --env PHPLDAPADMIN_LDAP_HOSTS=danigunawan.com \
+        --detach osixia/phpldapadmin:0.7.2
+
+2. sudo docker run --name phpldapadmin-service --hostname phpldapadmin-service --link ldap-service:ldap-host --env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.7.2
+
+atau
+
+sudo docker run --name phpldapadmin-service --hostname phpldapadmin-service --link ldap-service:127.0.0.1 --env PHPLDAPADMIN_LDAP_HOSTS=127.0.0.1 --detach osixia/phpldapadmin:0.7.2
+
+sudo ufw allow 6443
+sudo ufw allow 636 # asli port ldap adalah 389
+
+3. buat file ldap.sh di folder /home/danigunawan/ldap.sh
+
+lalu isikan :
+
+#!/bin/bash -e
+sudo docker run --name ldap-service --hostname ldap-service --detach osixia/openldap:1.1.8
+sudo docker run --name phpldapadmin-service --hostname phpldapadmin-service --link ldap-service:ldap-host --env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.7.2
+
+PHPLDAP_IP=$(sudo docker inspect -f "{{ .NetworkSettings.IPAddress }}" phpldapadmin-service)
+
+echo "Go to: https://$PHPLDAP_IP"
+echo "Login DN: cn=admin,dc=danigunawan,dc=com"
+echo "Password: admin"
+
+4. sudo chmod +x ldap.sh
+./ldap.sh
+
+5. buka melalui 
+https://localhost:6443 atau https://172.17.0.3/
+
+masukan username : cn=admin,dc=danigunawan,dc=com
+password : admin
+
+kalau tidak bisa :
+
+masukan username : cn=admin,dc=example,dc=org
+password : admin
+
+
+### INSTALL REACT NATIVE ENVIRONMENT ## 
+https://www.techomoro.com/how-to-install-and-setup-react-native-on-ubuntu-18-04-1-lts-bionic-beaver/
+
+- Install NodeJS
+curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo npm install npm@latest -g
+
+- Install OpenJDK8
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt-get install openjdk-8-jdk
+
+Note : Harus OPENJDK8 Jika Masih OpenJDK11 harus diganti env nya @Caranya : 
+CHANGE / SET DEFAULT OPENJDK/ORACLE JAVA
+REFF : 
+https://askubuntu.com/questions/599105/using-alternatives-with-java-7-and-java-8-on-14-04-2-lts
+https://askubuntu.com/questions/985521/default-java-on-ubuntu
+
+update-java-alternatives -l
+java-1.7.0-openjdk-amd64 1071 /usr/lib/jvm/java-1.7.0-openjdk-amd64
+java-1.8.0-openjdk-amd64 1069 /usr/lib/jvm/java-1.8.0-openjdk-amd64
+
+sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
+
+Note : abaikan jika ada error ini
+update-java-alternatives: plugin alternative does not exist: /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/IcedTeaPlugin.so
+
+
+- Install Android Studio
+https://developer.android.com/studio/index.html
+
+- Install Android SDK
+1. Open Android Studio
+2. SDK manager -> SDK platforms
+- Pilih Android 6.0 (Marshmallow) dan check semua : 
+Google APIs
+Android SDK Platform 23
+Intel x86 Atom_64 System Image
+Google APIs Intel x86 Atom_64 System Image
+
+- CONFIGURE ANDROID_HOME ENVIRONMENT VARIABLE
+export ANDROID_HOME=$HOME/Android/Sdk 
+export PATH=$PATH:$ANDROID_HOME/tools 
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
+sudo nano $HOME/.bash_profile
+
+Press Ctrl + O (Write out)
+Then press Enter
+And press Ctrl + x (exit)
+
+- INSTALL WATCHMAN
+git clone https://github.com/facebook/watchman.git
+cd watchman
+git checkout v4.9.0  # the latest stable release
+./autogen.sh
+./configure
+make
+sudo make install
+
+- INSTALL REACT NATIVE CLI
+sudo npm install -g react-native-cli
+
+- Buat Project
+CHOOSING YOUR PROJECT DESTINATION (optional)
+ex : cd /home/danigunawan/ReactNative
+
+react-native init AwesomeProject
+sudo react-native init AwesomeProject
+
+- SETTING PERMISSIONS FOR THE PROJECT DIRECTORY
+
+sudo chmod 777 -R /home/danigunawan/ReactNative/AwesomeProject
+
+- Install VSCODE
+https://code.visualstudio.com/#alt-downloads
+
+- Masuk Ke Folder Project
+cd AwesomeProject
+lalu diterminal ketik code .
+pada vscode View -> Integrated Terminal
+
+- RUNNING YOUR APPLICATION ON YOUR ANDROID DEVICE
+
+
 ## TROUBLE SHOOT ##
 1. Permission denied when running Bundle Install. #5211
 Reference : https://github.com/bundler/bundler/issues/5211
@@ -1830,6 +2019,16 @@ sudo apt-cache policy libssl-dev
 LALU INSTALL SESUAI VERSI :
 sudo apt-get install libssl-dev=1.0.2g-1ubuntu4.15
 sudo apt-get install libpq-dev
+
+JIKA DI UBUNTU 18.04 :
+https://stackoverflow.com/questions/50085258/installing-ruby-2-3-x-on-ubuntu-18-04-is-causing-an-error-by-the-end-of-the-inst
+
+sudo apt-get remove libssl-dev
+sudo apt install libssl1.0
+sudo apt install libssl1.0-dev
+sudo apt-get install libpq-dev
+
+NOTE : libssl1.0-dev amd64 1.0.2n-1ubuntu5.3
 
 4. install webmin error
 https://sourceforge.net/p/webadmin/discussion/600155/thread/0464291017/
@@ -1944,10 +2143,20 @@ SOLUSI :
 karena versi terbaru bundler 2.0.1 tidak support beberapa gem maka kita turunkan/downgrade
 
 https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-must-use-bundler-2-or-greater
+http://www.redmine.org/issues/30353
 
 - gem uninstall bundler
 - gem install bundler -v 1.17.3
 - bundle install 
+
+ATAU HAPUS VERSI 2.0 keatas install kurang dari 2.0 
+
+gem install bundler -v 1.17.3 # Currently the latest bundler version < 2.0
+bundle _1.17.3_ install
+Alternatively, you can also remove bundler 2.x completely and only use Bundler 1.x:
+
+gem uninstall bundler -v ">= 2.0" 
+gem install bundler -v "< 2.0" 
 
 15. Errors were encountered while processing:
     mysql-server-5.7
@@ -2026,6 +2235,12 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
   https://www.digitalocean.com/community/questions/ubuntu-16-04-apache2-multiple-websites
   https://stackoverflow.com/questions/10763234/multiple-domain-with-the-same-ip-and-port-in-apache
 
+  17. how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04
+https://www.digitalocean.com/community/tutorials/how-to-move-a-postgresql-data-directory-to-a-new-location-on-ubuntu-16-04
+
+  18. backup all db postgresql
+https://dba.stackexchange.com/questions/17740/how-to-get-a-working-and-complete-postgresql-db-backup-and-test
+
 ##### LARAVEL ######
 #<VirtualHost *:80>
 <VirtualHost *:81>
@@ -2049,8 +2264,6 @@ https://stackoverflow.com/questions/54063318/bundler-2-0-1-installed-rails-says-
 #### APPS ####
 Listen 82
 NameVirtualHost *:82
-
-  etc/apache2/sites-available/laravel.conf :
 
   <VirtualHost *:82>
     ServerName yourdomain.tld
@@ -2076,9 +2289,927 @@ Solution :
 sudo apache2ctl configtest
 
 
+18. Drag Icon App To Desktop Ubuntu
+http://ubuntuhandbook.org/index.php/2018/09/pin-app-shortcut-desktop-ubuntu-18-04/
+
+CARA 1 : 
+- install GNOME TWEAKS di ubuntu software
+- aktifkan show icons di menu desktop
+
+CARA 2 : 
+
+-Nautilus 
+-COPY icon disini : /usr/share/applications kedesktop 
+
+19. Rails broken - bundle not working - ovirt-engine-sdk - ERROR: Failed to build gem native
+An error occurred while installing ovirt-engine-sdk (4.3.0), and
+REFF : https://stackoverflow.com/questions/49728438/rails-broken-bundle-not-working-ovirt-engine-sdk-error-failed-to-build-ge
+Solution : 
+
+sudo apt-get install gcc build-essential libcurl4-openssl-dev libxml2-dev ruby ruby-dev
+
+bundle install
+
+20. Increasing-the-amount-of-inotify-watchers
+https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers
+
+
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+21. Switch php 7.0 to 7.1 ubuntu
+https://stackoverflow.com/questions/42619312/switch-php-versions-on-commandline-ubuntu-16-04
+https://tecadmin.net/switch-between-multiple-php-version-on-ubuntu/
+
+$ sudo a2dismod php7.0
+$ sudo a2enmod php7.1
+$ sudo service apache2 restart
+
+22. Multiple Web Nginx Passenger Listen 80 and 84
+https://serverfault.com/questions/655067/is-it-possible-to-make-nginx-listen-to-different-ports
+
+server {
+    listen       80;
+    server_name  example.org  www.example.org;
+    root         /var/www/port80/
+}
+
+server {
+    listen       84;
+    server_name  example.org  www.example.org;
+    root         /var/www/port81/
+}
+
+server {
+        listen 85;
+        listen [::]:85 ipv6only=on;
+
+        server_name mydomain.com;
+        passenger_enabled on;
+        rails_env    development;
+        #rails_env    production;
+        root         /home/dsc01/app/public;
+
+        # redirect server error pages to the static page /50x.html
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+}
+
+
+23. check chmod directory
+https://askubuntu.com/questions/332434/how-can-i-check-the-folder-permissions-in-ubuntu-server-12-04
+
+You can use the following command:
+
+ls -l directory
+or
+
+stat directory
+or, if you want to see only the permissions in numeric (octal) format:
+
+stat -c %a directory
+
+24. you dont have permission
+https://stackoverflow.com/questions/35761795/linux-apache-config-you-dont-have-permission-to-access-on-this-server
+
+25. You don't have permission to access / on this server. error for html app on apache server
+https://askubuntu.com/questions/989057/you-dont-have-permission-to-access-on-this-server-error-for-html-app-on-apac
+
+sudo chown -R www-data.www-data /var/www/html
+
+26. A personal guide to configure the full development environment with Ruby, Rails, Node, Postgres, ReactJS and React Native.
+
+https://github.com/olaviolacerda/linux-workstation-setup
+
+27. ruby on rails build to image docker development 
+https://blog.codeship.com/using-docker-for-rails-development/
+
 ###BLOG###
-http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220
+http://tenshotanaka.hatenablog.com/entry/2017/06/19/171220 # RUBY
+https://gorails.com/deploy/ubuntu/18.04 # DEPLOY ROR UBUNTU 1804
 ###BLOG###
+
+28. Failed to load module “canberra-gtk-module” … but already installed
+https://askubuntu.com/questions/342202/failed-to-load-module-canberra-gtk-module-but-already-installed
+
+sudo apt install libcanberra-gtk-module libcanberra-gtk3-module
+
+29. How Backup Folder Database MYSQL Ubuntu
+https://askubuntu.com/questions/80065/i-want-to-copy-a-directory-from-one-place-to-another-via-the-command-line
+
+Datamart : var/lib/mysql/
+sudo cp -R /var/lib/mysql/ /home/danigunawan/H/var/lib/
+
+30. REINSTALLING MYSQL
+REFF: 
+https://gist.github.com/pratos/47c960f449d9bdd9cb5788794ddb7b42
+
+Installing MySQL 5.7 in Ubuntu 16.04LTS (Note: Things still break in Ubuntu, advisable to move to docker and setup volumes_)
+
+sudo apt-get purge mysql-server mysql-client mysql-common mysql-server-core-5.7 mysql-client-core-5.7
+sudo rm -rf /etc/mysql /var/lib/mysql
+Clean-up
+
+sudo apt-get autoremove
+sudo apt-get autoclean
+Update-Upgrade
+
+sudo apt update
+sudo apt upgrade
+
+sudo apt install mysql-server
+sudo apt install mysql-client
+
+sudo mysql_secure_installation
+# Follow the questions and proceed accordingly
+
+mysql -u root -p
+# To login the first time
+# Create a database and also create a user that we would be using to put in our Flask ORM
+
+mysql> CREATE database <database>;
+mysql> CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+mysql> GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+mysql> FLUSH PRIVILEGES;
+Relogin the mysql shell with
+
+mysql -u newuser -p
+
+31. BASIC DOCKER + INSTALL MYSQL/MYSQL-SERVER DOCKER + PHPMYADMIN DOCKER CONTAINER
+REFF : 
+@ https://hub.docker.com/r/mysql/mysql-server/
+- sudo docker pull mysql/mysql-server
+@ https://hub.docker.com/r/phpmyadmin/phpmyadmin/
+
+@ copy file/folder on local machine to container docker
+Reff : https://stackoverflow.com/questions/40313633/how-to-copy-files-from-local-machine-to-docker-container-on-windows
+
+1. sudo docker cp /home/danigunawan/all_databases.sql mysql1:/root/
+2. sudo docker exec -it mysql1 bash
+3. cd /root
+4. ls (pastikan sudah kekopy all_databases.sql)
+
+@ copy file/folder dari container ke local machine
+Reff. https://stackoverflow.com/questions/22049212/copying-files-from-docker-container-to-host
+
+1. sudo docker cp mysql1:/root/all_databases.sql /home/danigunawan/
+2. ls /home/danigunawan | grep all_databases.sql (pastikan sudah ada)
+
+# DOCKER IMAGE LIST
+sudo docker image --help
+sudo docker image ls
+
+# DOCKER IMAGE REMOVE
+sudo docker image rm IMAGE_ID (dapat dari sudi docker image ls)
+
+# DOCKER CONTAINER LIST
+sudo docker container ls
+
+# DOCKER CONTAINER LIST YANG DISTOP
+https://stackoverflow.com/questions/30231187/list-only-stopped-docker-containers
+docker ps --filter "status=exited"
+docker ps -f "status=exited"
+sudo docker container ls -f 'status=exited'
+sudo docker container ls -f 'status=exited' -f 'status=dead' -f 'status=created'
+
+# Container START
+sudo docker container start
+
+
+# ACCESS ROOT DOCKER CONTAINER SHELL
+https://stackoverflow.com/questions/30172605/how-do-i-get-into-a-docker-containers-shell
+
+sudo docker ps # Cek Container
+sudo docker exec -it <mycontainer> bash # nama container ex: mysql1
+
+### RUN DOCKER SERVICE MYSQL ###
+# JIKA SET PASSWORD + FORwARD PORT
+
+- sudo docker run --name mysql2 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=29912120 -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
+
+# JIKA RANDOM PASSWORD + FORwARD PORT
+- sudo docker run --name mysql2 -p 3306:3306 -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:latest
+
+# JIKA SET PASSWORD MYSQL SPECIFIC VERSION + FORwARD PORT
+- sudo docker run --name mysql2 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=29912120 -e MYSQL_ROOT_HOST=% -d mysql/mysql-server:5.7.24
+
+# RUN DOCKER CONTAINER START AUTOMATICALY SYSTEM BOOT
+https://stackoverflow.com/questions/30449313/how-do-i-make-a-docker-container-start-automatically-on-system-boot
+
+Yes, docker has restart policies such as :
+
+docker run --restart=always 
+
+that will handle this. This is also available in the compose.yml config file as restart: always.
+
+@ CONTAINER ACTIVE 
+sudo docker ps
+
+@ CONTAINER REMOVE 
+sudo docker rm id_container (DIDAPAT DI DOCKER PS)
+NOTE : Jika Error response from daemon: You cannot remove a running container b637ddcc5e13ba4202e6e983fe36a16188394753b3d1024dd54a691c783a4244. Stop the container before attempting removal or force remove
+
+Solusi : 
+
+sudo docker rm id_container -f (force dipaksa)
+
+@ CONTAINER START / STOP
+sudo docker start id_container
+sudo docker stop id_container
+
+# DOCKER TERMINAL MYSQL
+sudo docker exec -it mysql1 mysql -uroot -p
+
+# RESTORE BACKUP SQL TO DOCKER 
+https://gist.github.com/nshtg/24c22f8878456e00c1f07f762038f58c
+http://www.mimastech.com/2017/01/04/howto-import-a-database-into-a-docker-container/
+https://trello.com/b/qRzbhoTE/mysql
+
+1. BUAT DUMPINGAN SQL DARI KOMPUTER
+mysqldump -u root -p --opt --all-databases > all_databases.sql atau
+mysqldump -u root -p --all-databases --skip-lock-tables > all_databases.sql
+2. Copy all_databases.sql dari file local kita misal /home/danigunawan/H/db/all_databases.sql ke root mysql1 (container)
+
+syntax : 
+
+sudo docker cp /home/danigunawan/H/db/all_databases.sql mysql1:/root  #mysql1 nama kontainer
+
+atau 
+
+sudo docker cp /home/danigunawan/H/db/all_databases.sql mysql1:/root  #mysql1 nama kontainer
+
+3. masuk docker container shell
+sudo docker exec -it mysql1 /bin/bash # mysql1 nama user container untuk mysql
+
+4. lalu restore file /root/all_databases.sql (ini all databases dump bukan single database)
+
+@ ini all database restore
+mysql -u root -p < /root/all_databases.sql
+
+@ ini single database restore
+mysql -uroot -p nama_single_database < /root/all_databases.sql
+
+Note : 
+How to skip row when importing bad MySQL dump
+https://stackoverflow.com/questions/7622253/how-to-skip-row-when-importing-bad-mysql-dump
+https://stackoverflow.com/questions/11263018/mysql-ignore-errors-when-importing
+
+
+mysql -u root -p --force < /root/all_databases.sql
+atau
+mysql -u root -p -f < /root/all_databases.sql
+
+note : jika ditanya password : 29912120
+
+## PHP ARTISAN MIGRATE ERROR MYSQL DOCKER ##
+  [Illuminate\Database\QueryException]                                         
+  SQLSTATE[HY000] [2002] No such file or directory (SQL: select * from inform  
+  ation_schema.tables where table_schema = usermanagementsystemlaravel and ta  
+  ble_name = migrations)      
+
+  Solusi :
+  1. ifconfig cek ip
+  2. ubah .env host menjadi ip yang ada pada ifconfig yang digunakan saat ini
+
+31.1 INSTALL MARIA DB DOCKER
+sudo docker run --name mariadb -p 3307:3306 -e MYSQL_ROOT_PASSWORD=29912120 -d mariadb/server:10.3
+
+telnet localhost 3307
+
+32. SOA QUEUE APACHE KAFKA WITH KARAFKA RAILS
+https://mensfeld.pl/2018/01/kafka-on-rails-using-kafka-with-ruby-on-rails-part-2-getting-started-with-ruby-and-kafka/
+
+33. CLEAR HISTORY UBUNTU/LINUX
+https://medium.com/@rrfd/setting-up-docker-postgresql-connecting-locally-using-advanced-functions-d8fe3bd58de6
+https://www.ostechnix.com/how-to-clear-command-line-history-in-linux/
+DEPLOY DOCKER CONTAINER : https://severalnines.com/blog/deploying-postgresql-docker-container
+
+$ history
+To clear the history, just run any one of the following commands:
+$ history -c
+Or
+$ history -cw
+
+34. DOCKER INSTALL POSTGRESQL
+https://hub.docker.com/_/postgres
+sudo docker pull postgres 
+
+with tag 
+sudo docker pull postgres:tag
+sudo docker pull postgres:9.5-alpine 14 MB
+
+# LATEST VERSION (UNTUK BASIC PAKAI YG INI)
+1. $ sudo docker run --name pgsql_latest -p 54320:5432 -e POSTGRES_PASSWORD=29912120 -d postgres
+
+# SPECIFIC VERSION 
+1.1 $ sudo docker run --name pgsql1 -p 54320:5432 -e POSTGRES_PASSWORD=29912120 -d postgres:11
+
+note : 
+
+1.2 -p 54320:5432 konek dari 5432 pg didocker lalu di forward alias memakai port 54320 untuk di local guest komputer
+
+1.3 note jika memakai volume :
+$ docker run -d --name my_postgres -v my_dbdata:/var/lib/postgresql/data -p 54320:5432 postgres:11
+
+atau 
+
+1.4 sudo docker run --name local-postgres10.3 -p 54320:5432 -e POSTGRES_PASSWORD=password -d --volumes-from postgres10.3-database postgres:10.3
+
+
+2. coba telnet localhost 54320
+
+3. masuk navicat
+username : postgres
+password : 29912120
+host : localhost
+port : 54320
+
+
+35. Usage step A causing "Fail to import not found or unreadable" #175
+File to import not found or unreadable: materialize/components/color.
+SOLUSI :
+- ubah 
+#gem 'rails', '4.2.3'
+
+menjadi
+
+gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+
+karena 4.2.3 tidak support bundler 2.0.1
+- ubah gem 'materialize-sass' menjadi gem 'materialize-sass', '0.100.2' atau 'materialize-sass', '0.97.7'
+bundle install
+coba lagi 
+
+36. couldn't find file 'jquery-ui/datepicker' with type 'application/javascript
+Reff : 
+https://stackoverflow.com/questions/42495010/couldnt-find-file-jquery-ui-datepicker-with-type-application-javascript
+Solusi :
+
+Downgrade Gem jquery-ui-rails menjadi gem 'jquery-ui-rails', '5.0.5'
+
+37. LoadError: cannot load such file -- rails/test_unit/sub_test_task
+https://github.com/drapergem/draper/issues/681
+Solusi : 
+gem 'draper', github: 'audionerd/draper', branch: 'rails5'
+
+38. An error occurred while installing rmagick (2.16.0), and Bundler cannot
+continue.
+Make sure that `gem install rmagick -v '2.16.0' --source
+'https://rubygems.org/'` succeeds before bundling.
+
+
+Solusi : 
+https://rubygems.org/gems/rmagick/versions/2.15.4
+https://stackoverflow.com/questions/3704919/installing-rmagick-on-ubuntu
+sudo apt-get install imagemagick libmagickwand-dev
+
+39. Rails: LoadError: cannot load such file -- active_resource/railtie
+REFF: 
+https://makandracards.com/foxsoft/34535-rails-loaderror-cannot-load-such-file-active_resource-railtie
+
+Solution : 
+ActiveResource is no longer an integral part of Rails and has been moved to a separate gem. If you don't require ActiveResource in your app then remove require "active_resource/railtie" from the file in question (application.rb in this case)
+
+40. undefined method `whitelist_attributes=' for ActiveRecord::Base:Class #13740
+
+https://github.com/rails/rails/issues/13740
+
+Solution :
+removing config.active_record.whitelist_attributes = true from config/application.rb workarounds the problem.
+
+41. SET Default ENV Rails
+rails db:environment:set RAILS_ENV=development
+
+42.couldn't find file 'bootstrap-table' with type 'text/css'
+Reff : https://github.com/wenzhixin/bootstrap-table
+
+ke root project misal project root nya di cd /projectrails
+lalu :
+sudo npm install bootstrap-table
+rails s kembali
+
+43. Install PlayOnLinux Ubuntu 18.04
+wget -q "http://deb.playonlinux.com/public.gpg" -O- | sudo apt-key add -
+sudo wget http://deb.playonlinux.com/playonlinux_bionic.list -O /etc/apt/sources.list.d/playonlinux.list
+sudo apt-get update
+sudo apt-get install playonlinux
+
+44. Install Photoshop Ubuntu on Playonlinux
+- open playonlinux
+- select adobe photoshop cs6
+- next 
+- finish
+
+45. Fixing rails 5 deprecation warning for matching routes
+https://stackoverflow.com/questions/41097422/fixing-rails-5-deprecation-warning-for-matching-routes
+
+Solusi : 
+
+In resources it should still be path:. And in the route definition you have an extra ":" after match. Also you have to specify via: [:get, :post] if you match.
+So the final version looks like:
+
+resources :landings, only: [:index], path: '/golf' do
+  collection do
+    match 'how-to-break-70', as: 'break_70', action: 'break_70', via: [:get, :post]
+  end
+end
+
+46. Bug when switching to Rails 4.1 - `method_missing': undefined method `whitelist_attributes=' for ActiveRecord::Base:Class (NoMethodError)
+
+https://stackoverflow.com/questions/27556631/bug-when-switching-to-rails-4-1-method-missing-undefined-method-whitelist
+
+Solusi : 
+
+You can safely remove config.active_record.whitelist_attributes = false
+
+From your app config file.
+
+And remove all white_list_attributes in your model classes.
+
+47. An error occurred while installing ruby-filemagic (0.7.2), and Bundler
+https://stackoverflow.com/questions/15577171/missing-library-while-installing-ruby-filemagic-gem-on-linux
+Solusi : 
+sudo apt-get install libmagic-dev
+
+48. An error occurred while installing tiny_tds (2.1.2), and Bundler cannot
+
+https://stackoverflow.com/questions/23593086/rails-4-error-when-installing-tiny-tds-gem
+
+Solution : 
+
+sudo apt-get install freetds-dev
+
+49. cara partisi existing linux (nambah hardis di linux dan memerge/partisi)
+https://www.tecmint.com/add-new-disk-to-an-existing-linux/
+
+50.  How To Move an Apache Web Root to a New Location on Ubuntu 18.04
+https://www.digitalocean.com/community/tutorials/how-to-move-an-apache-web-root-to-a-new-location-on-ubuntu-18-04
+
+51. CONVERT MYSQL TO PGSQL
+https://medium.com/@nathanwillson/converting-from-mysql-to-postgres-with-pgloader-for-heroku-b1212c6ad932
+
+
+52. How To Move an Apache Web Root to a New Location on Ubuntu 16.04
+Cara memindahkan setingan /var/www/html ke folder lain ex : /home/danigunawan/wwww
+REFF : https://www.digitalocean.com/community/tutorials/how-to-move-an-apache-web-root-to-a-new-location-on-ubuntu-16-04
+
+grep -R "DocumentRoot" /etc/apache2/sites-enabled
+sites-enabled/000-default.conf   DocumentRoot /var/www/html
+sudo rsync -av /var/www/html /mnt/volume-nyc1-01 
+atau di folder /home/danigunawan/www
+sudo rsync -av /var/www/html /home/danigunawan/www
+sudo nano /etc/apache2/sites-enabled/000-default.conf 
+isikan pada port 85 : 
+
+53.  Host 'xxx.xxx.xxx.xxx' is not allowed to connect to this MariaDB server.
+https://stackoverflow.com/questions/54706507/mysql-mariadb-is-not-working-with-remote-connections
+
+mysql -u root -p
+FLUSH PRIVILEGES; 
+
+
+##### LARAVEL ######
+#<VirtualHost *:80>
+<VirtualHost *:81>
+    ServerName localhost
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/kmuts/public
+    #DocumentRoot /home/danigunawan/H/laravel-54-advanced-user-manager/public
+    
+    <Directory /var/www/html/kmuts>
+     #<Directory /home/danigunawan/H/laravel-54-advanced-user-manager>  
+      AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+sudo nano /etc/apache2/sites-available/ssl-default.conf
+
+Ganti menjadi : 
+
+<IfModule mod_ssl.c>
+        #<VirtualHost _default_:443>
+        <VirtualHost _default_:444>
+                ServerAdmin webmaster@localhost
+
+                #DocumentRoot /var/www/html
+                DocumentRoot /home/danigunawan/www
+
+Restart Apache : 
+sudo apachectl configtest
+atau
+sudo service apache2 restart
+sudo systemctl reload apache2
+#### END LARAVEL ####
+
+#### APPS ####
+listen 82
+NameVirtualHost *:82
+
+  <VirtualHost *:82>
+    ServerName localhost
+
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html>
+        AllowOverride All
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+#### END APPS ####
+
+### APPS LARAGON DIR H: ####
+Listen 85
+NameVirtualHost *:85
+
+  <VirtualHost *:85>
+    ServerName localhost
+    ServerAdmin webmaster@localhost
+    DocumentRoot /home/danigunawan/www
+    
+    <Directory /home/danigunawan/www>
+    #Options Indexes FollowSymLinks
+    #AllowOverride None
+    #Require all granted
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+#### END APPS DIR H: ####
+
+53. Fatal error: Maximum execution time of 30 seconds exceeded
+REFF: https://stackoverflow.com/questions/5164930/fatal-error-maximum-execution-time-of-30-seconds-exceeded
+
+sudo nano /etc/php/7.1/apache2/php.ini 
+
+Set : 
+max_execution_time = 360      ; Maximum execution time of each script, in seconds (I CHANGED THIS VALUE)
+max_input_time = 120          ; Maximum amount of time each script may spend parsing request data
+;max_input_nesting_level = 64 ; Maximum input variable nesting level
+memory_limit = 128M           ; Maximum amount of memory a script may consume (128MB by default)
+
+54. Reset auto increment counter in postgres
+https://stackoverflow.com/questions/5342440/reset-auto-increment-counter-in-postgres
+ALTER SEQUENCE product_id_seq RESTART WITH 1453
+
+55. INSTALL DOCKER MONGODB UBUNTU 18.04 
+https://techsparx.com/software-development/docker/damp/mongodb.html
+https://www.youtube.com/watch?v=Cv292D_8NN0
+
+sudo docker pull mongo
+sudo docker run --name mongodb -p 27017:27017 -d mongo
+
+56. An error occurred while installing therubyracer (0.11.0), and Bundler
+cannot continue.
+Make sure that `gem install therubyracer -v '0.11.0' --source
+'https://rubygems.org/'` succeeds before bundling.
+
+In Gemfile:
+  therubyracer
+
+Solution : 
+
+gem install libv8
+
+57. rake gettext:add_language[en]
+mkdir -p /home/danigunawan/GITLAB/vaas_v2/locale/en
+Error parsing lib/templates/haml/scaffold/_form.html.haml
+rake aborted!
+Haml::SyntaxError: Illegal nesting: nesting within plain text is illegal.
+(haml):8
+Tasks: TOP => gettext:po:update => gettext:po:en:update => /home/danigunawan/GITLAB/vaas_v2/locale/en/im-config.po => /home/danigunawan/GITLAB/vaas_v2/locale/en/im-config.edit.po => /home/danigunawan/GITLAB/vaas_v2/locale/im-config.pot
+(See full trace by running task with --trace)
+
+FastGettext::Storage::NoTextDomainConfigured: Current textdomain (nil) was not added, use FastGettext.add_text_domain !
+/home/danigunawan/GITLAB/vaas_v2/db/seeds.rb:76:in `<main>'
+Tasks: TOP => db:seed
+(See full trace by running task with --trace)
+
+
+Solusi : 
+
+https://blog.ladslezak.cz/2012/01/24/switching-from-gettext-to-fastgettext/
+- tambahkan di gemfile :
+
+gem 'fast_gettext'
+
+# 0.4.3 contains fixes in
+#'rake gettext:store_model_attributes' task
+gem 'gettext_i18n_rails', '>= 0.4.3'
+
+# rails-i18n provides translations for ActiveRecord
+# validation error messages
+gem 'rails-i18n'
+
+# needed to collect translatable strings
+# not needed at production
+group :development do
+  # needed for HAML support (optional)
+  gem 'ruby_parser'
+
+  # no need to load the gem via require
+  # we only need the rake tasks
+  gem 'gettext', '>= 1.9.3', :require => false
+end
+
+- create config/initializers/fast_gettext.rb file:
+# define your text domain
+FastGettext.add_text_domain 'foo', :path => File.join(File.dirname(__FILE__), '..', '..', 'locale')
+
+
+# set the default textdomain
+FastGettext.default_text_domain = 'foo'
+
+# set available locales
+# (note: the first one is used as a fallback if you try to set an unavailable locale)
+FastGettext.default_available_locales = ["en","ar","cs","de","es"]
+
+- di application_controller.rb tambahkan : 
+
+class ApplicationController < ActionController::Base
+  # replace these old Gettext calls:
+  #   init_gettext "your_domain"
+  #   GetText.textdomain("your_domain")
+  # by this:
+  include FastGettext::Translation
+
+  before_filter :set_users_locale 
+
+  def set_users_locale
+    I18n.locale = FastGettext.set_locale(params[:locale] || cookies[:locale] ||
+      request.env['HTTP_ACCEPT_LANGUAGE'] || 'en_US')
+    cookies[:locale] = I18n.locale if cookies[:locale] != I18n.locale.to_s
+  end
+end 
+
+
+58. Rails Template Scaffold Custom
+NATIVE : https://qiita.com/akito1986/items/d9f379191fd6b98de955
+
+HAML : https://qiita.com/abgata20000/items/515f64632942c4e982b6
+
+bundle exec rails app:templates:copy
+
+
+59. Custom Specific Assets
+Contoh 
+-1. Sessions_Controller
+render :layout => "sessions"
+
+-2. buka atau tambah jika tidak ada app/assets/stylesheets/session.css.scss
+tambahkan sebagian dari yang application.css.scss dan css lainnya sehingga :
+
+disini kita hanya menambahkan  *= require awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+ *= require_self
+ *= require animate/animate.css
+ *= require style
+ *= require font-awesome
+ *= require awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+ */
+
+-3. buka atau tambah jika tidak ada app/assets/javascripts/session.js
+tambahkan sebagian dari yang application.js dan js laod lainnya sehingga :
+
+// This is a manifest file that'll be compiled into application.js, which will include all the files
+// listed below.
+//
+// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, or any plugin's
+// vendor/assets/javascripts directory can be referenced here using a relative path.
+//
+// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// compiled file. JavaScript code in this file should be added after the last require_* statement.
+//
+// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
+// about supported directives.
+//
+
+//= require rails-ujs
+//= require activestorage
+//= require jquery/jquery-3.1.1.min.js
+//= require popper
+//= require bootstrap
+//= require pace/pace.min.js
+//= require peity/jquery.peity.min.js
+//= require slimscroll/jquery.slimscroll.min.js
+//= require metisMenu/jquery.metisMenu.js
+//= require inspinia.js
+
+-4. Buka / buat app/views/layouts/sessions.html.erb (copy dari empty.html.erb)
+kita hanya merubah :
+
+    <!-- Main css styles -->
+    <%= stylesheet_link_tag "application" %>
+
+    <!-- Main javascript files -->
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+menjadi : 
+    <!-- Main css styles -->
+    <%= stylesheet_link_tag "sessions" %>
+
+    <!-- Main javascript files -->
+    <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
+
+
+sehingga :
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>INSPINIA | Responsive admin theme</title>
+
+    <!-- Include style per-controller - vendor plugins -->
+    <%= stylesheet_link_tag params[:controller] if ::Rails.application.assets.find_asset("#{params[:controller]}.css") %>
+
+    <!-- Main css styles -->
+    <%= stylesheet_link_tag "sessions" %>
+
+    <!-- Main javascript files -->
+    <%= javascript_include_tag 'sessions', 'data-turbolinks-track' => true %>
+
+    <%= csrf_meta_tags %>
+
+
+
+</head>
+
+<style type="text/css">
+  .white-bg{
+  background: url(https://img.freepik.com/free-vector/blue-white-crystal-textured-background_53876-85226.jpg?size=626&ext=jpg);
+  }
+</style>
+
+
+<body class="white-bg">
+
+<!-- Main view  -->
+<%= yield %>
+
+
+    <!-- Include javascript per-controller - vendor plugins -->
+    <%= javascript_include_tag params[:controller] if ::Rails.application.assets.find_asset("#{params[:controller]}.js") %>
+
+    <!-- Include javascript per-view -->
+    <!-- For demo purpose we include javascript in view but you can easily start SeedProject and organize it with Rails asset pipeline as you want -->
+    <%= yield :javascript %>
+
+</body>
+</html>
+
+-5. buka config/initializer/assets.rb
+tambahkan : 
+
+# Sessions
+Rails.application.config.assets.precompile += %w( sessions.css sessions.js )
+
+-6. Restart 
+
+60. gemfile-lock-write-error-permissions
+https://stackoverflow.com/questions/17519090/gemfile-lock-write-error-permissions
+
+sudo chown -R $(whoami):$(whoami) vaas
+
+61. gitignore database.yml
+
+Rails: .gitignore still tracking my database.yml file
+
+https://stackoverflow.com/questions/33470898/rails-gitignore-still-tracking-my-database-yml-file
+
+62. Reset Sequence PostgreSQL
+
+ALTER SEQUENCE vendors_id_seq RESTART WITH 1319
+
+-- ALTER SEQUENCE users_id_seq RESTART WITH 1834
+
+-- SELECT setval('vedors_id_seq', 1318) FROM vendors
+
+-- ALTER SEQUENCE "vedors_id_seq"  RESTART WITH 1318
+
+63. GIT RESET HARD
+https://stackoverflow.com/questions/1125968/how-do-i-force-git-pull-to-overwrite-local-files
+
+Important: If you have any local changes, they will be lost. With or without --hard option, any local commits that haven't been pushed will be lost.[*]
+If you have any files that are not tracked by Git (e.g. uploaded user content), these files will not be affected.
+
+I think this is the right way:
+
+git fetch --all
+Then, you have two options:
+
+git reset --hard origin/master
+OR If you are on some other branch:
+
+git reset --hard origin/<branch_name>
+Explanation:
+git fetch downloads the latest from remote without trying to merge or rebase anything.
+
+Then the git reset resets the master branch to what you just fetched. The --hard option changes all the files in your working tree to match the files in origin/master
+
+Maintain current local commits
+[*]: It's worth noting that it is possible to maintain current local commits by creating a branch from master before resetting:
+
+git checkout master
+git branch new-branch-to-save-current-commits
+git fetch --all
+git reset --hard origin/master
+After this, all of the old commits will be kept in new-branch-to-save-current-commits.
+
+Uncommitted changes
+Uncommitted changes, however (even staged), will be lost. Make sure to stash and commit anything you need. For that you can run the following:
+
+git stash
+And then to reapply these uncommitted changes:
+
+git stash pop
+
+
+$ sudo nano .gitignore
+$ sudo chmod 1777 .gitignore
+$ echo config/database.yml >> .gitignore
+$ mv config/database.yml config/database.yml.example
+$ git add .
+$ git commit -am "put database.yml to .gitignore and and rename"
+$ cp config/database.yml.example config/database.yml
+
+
+64. Current Bundler version:
+    bundler (2.0.1)
+
+gem uninstall bundler 2.0.1
+
+lalu install hanya versi
+
+gem install bundler -v 1.17.3
+
+
+65. Cara Mempublish Docker
+
+
+
+# TIPS DOCKER 
+- Docker From Scratch
+https://code.tutsplus.com/id/tutorials/docker-from-the-ground-up-building-images--cms-28166
+- How to move Docker containers between different hosts? (memindahkan docker container di lain hosts)
+https://stackoverflow.com/questions/28734086/how-to-move-docker-containers-between-different-hosts
+- Cara Cloning Docker
+https://stackoverflow.com/questions/48275091/clone-docker-containers-with-data-to-another-host
+- Membuat Custom Image Docker
+https://sekolahlinux.com/membuat-custom-image-docker-dengan-commit-dockerfile/
+- Solving Docker permission denied while trying to connect to the Docker daemon socket
+https://techoverflow.net/2017/03/01/solving-docker-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+https://techoverflow.net/2018/12/15/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket/
+
+66. Authenticates a Ruby on Rails User model via LDAP and saves their LDAP photo if they have one
+
+https://coderwall.com/p/tyojoq/authenticates-a-ruby-on-rails-user-model-via-ldap-and-saves-their-ldap-photo-if-they-have-one
+
+67. https://stackoverflow.com/questions/39907266/docker-compose-rails-with-mysql
+
+
+68. After upgrading Rails from 5.1 to 5.2 I got following warning messages
+
+
+[fog][DEPRECATION] Unable to load Fog::AWS::CDN
+[fog][DEPRECATION] The format Fog::CDN::AWS is deprecated
+[fog][DEPRECATION] Unable to load Fog::AWS::Compute
+[fog][DEPRECATION] The format Fog::Compute::AWS is deprecated
+[fog][DEPRECATION] Unable to load Fog::AWS::DNS
+[fog][DEPRECATION] The format Fog::DNS::AWS is deprecated
+[fog][DEPRECATION] Unable to load Fog::AWS::Storage
+[fog][DEPRECATION] The format Fog::Storage::AWS is deprecated
+
+SOLUTION : 
+
+gem 'fog-core', '2.1.0' 
 
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
@@ -2601,3 +3732,144 @@ dhanexlab@ubuntu:~$ sudo nano /etc/network/interfaces
 [sudo] password for dhanexlab: 
 
   GNU nano 2.5.3         File: /etc/network/interfaces                          
+
+
+ mysql-server-core-5.7
+ mysql-server mysql-server-5.7
+ mysql-client
+ mysql-client-5.7
+ mysql-client-core-5.7
+ mysql-server-core-5.7
+
+
+
+#### CREATE SERVICE AND DESKTOP RYZEN1 ####
+1. install wbar-config di ubuntu
+2. buat icon desktop dengan run
+./fr_regis.sh # untuk menjalankan background rails
+isinya : 
+
+#!/bin/sh
+cd /var/www/html/vaas_v2_pg_office/ && ~/.rbenv/bin/rbenv exec rails s -p 3004 -b 10.32.201.36
+
+3. buat icon jalankan browser 
+REFF: 
+https://askubuntu.com/questions/1045723/how-to-add-website-url-shortcut-to-ubuntu-dock-on-ubuntu-18-04
+https://ubuntuforums.org/showthread.php?t=1407811
+https://askubuntu.com/questions/1045723/how-to-add-website-url-shortcut-to-ubuntu-dock-on-ubuntu-18-04
+
+firefox 10.32.201.39:8080 # new window
+firefox 10.32.201.36:3004
+firefox -new-tab "10.32.201.39:8080" # newtab
+firefox -w http://ubuntuforums.org/ &
+firefox %u www.google.ca
+firefox google.com &
+firefox -new-window http://ubuntuforums.org/ &
+
+
+
+### SERVICE 1 ###
+
+# [Unit]
+Description=FR TLT REGIST
+After=network.target
+
+[Service]
+Type=simple
+# ExecStart=/bin/bash -lc 'cd /var/www/html/vaas_v2_pg_office/ && ~/.rbenv/bin/rbenv exec rails s -b 192.168.1.3 -p 3001'
+ExecStart=/bin/bash -lc 'cd /var/www/html/vaas_v2_pg_office/ && ~/.rbenv/bin/rbenv exec rails s -b 192.168.1.3 -p 3004'
+User=ryzen1
+
+[Install]
+WantedBy=multi-user.target
+
+#### SERVICE 2 ####
+# [Unit]
+Description=FR API TLT REGIST
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -lc 'cd /var/www/html/apivaas_v12/ && ~/.rbenv/bin/rbenv exec rails s -p 3000 -b 192.168.1.3'
+User=ryzen1
+
+[Install]
+WantedBy=multi-user.target
+
+#### SERVICE 3 ####
+# [Unit]
+Description=FR TLT REGIST
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -lc 'cd /var/www/html/vaas_v2_postgresql/ && ~/.rbenv/bin/rbenv exec rails s -p 3002 -b 192.168.1.3'
+User=ryzen1
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+PUMA RUN TEST CONNECT X SERVER :
+https://askubuntu.com/questions/175611/cannot-connect-to-x-server-when-running-app-with-sudo
+https://superuser.com/questions/310197/how-do-i-fix-a-cannot-open-display-error-when-opening-an-x-program-after-sshi
+https://askubuntu.com/questions/923855/bcompare-cannot-connect-to-x-server
+https://askubuntu.com/questions/571116/cannot-connect-to-x-server-error
+https://stackoverflow.com/questions/646930/cannot-connect-to-x-server-0-0-with-a-qt-application
+
+~/.rbenv/bin/rbenv exec puma -C /var/www/html/vaas_v2_postgresql/config/puma.rb
+
+
+
+## ORIGINAL ##
+# [Unit]
+Description=FR TLT REGIST
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -lc 'cd /var/www/html/vaas_v2_postgresql/ && ~/.rbenv/bin/rbenv exec rails s -b 10.36.14.28'
+User=ryzen1
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+## RAILS RBENV PUMA MODIF ##
+
+# [Unit]
+Description=FR TLT REGIST
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/html/vaas_v2_postgresql
+ExecStart=/bin/bash -lc '~/.rbenv/bin/rbenv exec puma -C /var/www/html/vaas_v2_postgresql/config/puma.rb'
+User=ryzen1
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+## PUMA ##
+[Unit]
+Description=Puma Rails Server
+After=network.target
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/home/deploy/app/current
+ExecStart=/home/deploy/.rbenv/bin/rbenv exec bundle exec puma -C /home/deploy/app/shared/config/puma.rb
+ExecStop=/home/deploy/.rbenv/bin/rbenv exec bundle exec pumactl -S /home/deploy/app/shared/tmp/pids/puma.state stop
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
