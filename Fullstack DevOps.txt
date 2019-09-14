@@ -3211,6 +3211,22 @@ SOLUTION :
 
 gem 'fog-core', '2.1.0' 
 
+69. ### Bundle install could not find compatible versions for gem “bundler” ###
+https://stackoverflow.com/questions/54901077/bundle-install-could-not-find-compatible-versions-for-gem-bundler
+
+Your bundler gem is too big. You can downgrade for now by changing your gemfile to specify the lower version, and deleting the lock file again.
+
+gem 'bundler', '1.17.3' 
+Then try these commands in the terminal
+
+gem install bundler -v 1.17.3
+gem uninstall bundler -v 2.0.2 # check gem list | grep bundler
+bundle update --bundler
+bundle install
+That last install command might be redundant. I'm on my phone so I can't test anything unfortunately.
+
+Best of luck!
+
 danigunawan$ ssh dhanexlab@192.168.88.26
 ssh: connect to host 192.168.88.26 port 22: Operation timed out
 Dani-Gunawan-MacBook-Pro:~ danigunawan$ history
@@ -3872,4 +3888,104 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
+
+	### Remote Linux Dengan SSH + GUI X11 Forwarding ###
+
+	https://dolanan4techno.wordpress.com/2013/04/18/remote-linux-dengan-ssh-gui-x11-forwarding/
+
+	#yum -y install openssh-server openssh-clients
+
+	selanjutnya setelah terinstal kita dapat melakukan remote ke dalam linux melalui ssh dengan perintah
+
+	#ssh –X <ip address>      atau       #ssh –X <nama user>@<ip address>
+
+	contoh :
+
+	#ssh –X 192.168.10.5     atau        #ssh –X  root@192.168.10.5
+
+	option –X berfungsi untuk mengaktifkan fitur X11 Forwarding
+
+	ssh -X 10.32.201.36
+
+
+
+
+### CHANGE ENCODING RAILS ####
+https://mensfeld.pl/2016/06/ruby-on-rails-mysql2error-incorrect-string-value-and-specified-key-was-too-long/
+https://makandracards.com/makandra/594-utf-8ify-an-existing-mysql-database
+https://stackoverflow.com/questions/6104112/how-to-make-a-rails-migration-be-utf-8-instead-of-my-default-latin1
+https://babiy3104.hateblo.jp/entry/2014/02/13/000219
+http://bdunagan.com/2011/09/29/converting-mysql-from-latin1-to-utf8/
+https://stackoverflow.com/questions/8538086/how-can-i-use-utf8-characters-in-rails-migration
+
+
+
+### RAILS WEBPACKER ISSUE ###
+https://github.com/rails/webpacker/issues/1568
+Railtie yarn check --integrity fails running in development under docker #1568 
+
+
+Steps to reproduce:
+
+Create a new Rails 5.2 application, specifying --webpack (other options used in example to reduce the number of moving parts)
+$ rails new webpacker-example --webpack --skip-active-record --skip-action-mailer --skip-active-storage --skip-action-cable --skip-turbolinks --skip-test --skip-system-test --no-rc
+$ cd webpacker-example
+$ yarn install
+Add .dockerignore, Dockerfile, .env.docker and docker-compose.yml files as per this gist:
+https://gist.github.com/sauy7/d5c732faad876fde8b2d16672b29a992
+
+Run:
+
+docker-compose up --build
+
+Note in the output that:
+
+RUN yarn check --integrity
+shows:
+
+yarn check v1.7.0
+success Folder in sync.
+Done in 0.XXs.
+Wait for Rails to try to fully start up.
+
+Observe in server output:
+
+========================================
+  Your Yarn packages are out of date!
+  Please run `yarn install` to update.
+========================================
+Note in config/environments/development.rb:
+
+config.webpacker.check_yarn_integrity = true
+
+Edit to:
+
+config.webpacker.check_yarn_integrity = false
+
+Re-run:
+
+docker-compose up --build
+
+Browse to http://localhost:3000 to see the default Rails home page.
+
+
+ATAU 
+
+
+remove yarn.lock
+
+
+
+### INSTALL SONARQUBE ####
+
+reff : https://www.howtoforge.com/tutorial/how-to-install-sonarqube-on-ubuntu-1804/
+https://www.youtube.com/watch?v=-vIyHPqbwoo
+https://www.digitalocean.com/community/tutorials/how-to-ensure-code-quality-with-sonarqube-on-ubuntu-18-04
+1. Invalid command ProxyRequests when setting up jenkins
+https://stackoverflow.com/questions/15850465/invalid-command-proxyrequests-when-setting-up-jenkins
+
+
+
+
 

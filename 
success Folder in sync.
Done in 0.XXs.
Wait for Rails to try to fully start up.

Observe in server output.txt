@@ -1,0 +1,22 @@
+
+success Folder in sync.
+Done in 0.XXs.
+Wait for Rails to try to fully start up.
+
+Observe in server output:
+
+========================================
+  Your Yarn packages are out of date!
+  Please run `yarn install` to update.
+========================================
+Note in config/environments/development.rb:
+
+config.webpacker.check_yarn_integrity = true
+
+Edit to:
+
+config.webpacker.check_yarn_integrity = false
+
+Re-run:
+
+docker-compose up --build
