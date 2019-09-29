@@ -771,6 +771,25 @@ sudo apt-get install php7.2-mysql
 
 sudo apt-get install php7.2 php7.2-cli php7.2-common php7.2-json php7.2-opcache php7.2-mysql php7.2-mbstring php7.2-mcrypt php7.2-zip php7.2-fpm
 
+# UNTUK PHP 7.0
+sudo apt-get update
+sudo apt-get upgrade
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.0 php7.0-mcrypt php7.0-xml php7.0-gd php7.0-opcache php7.0-mbstring
+sudo apt install php7.0-gmp php7.0-imap php7.0 php7.0-xml php7.0-mbstring php7.0-mysql php7.0-json 
+sudo apt-get install php7.0-curl php7.0-cli php7.0-bcmath php7.0-common php7.0-mcrypt php7.0-gd 
+sudo apt-get install libapache2-mod-php7.0 php7.0-zip
+sudo apt-get install apache2 libapache2-mod-php7.0
+sudo apt-get install php7.0-fpm
+cd /tmp
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+cd /var/www/html
+sudo composer create-project laravel/laravel your-project --prefer-dist
+sudo chgrp -R www-data /var/www/html/your-project
+sudo chmod -R 775 /var/www/html/your-project/storage
+
 
 ### OPTIONAL JIKA INGIN ISI SEMUA DARI VAR/WWW BISA WRITABLE RENAME, DELETE DLL FULL ACCESS ###
 Reff : 
@@ -2280,6 +2299,130 @@ NameVirtualHost *:82
 </VirtualHost>
 
 #### END APPS ####
+
+Other  :
+##### LARAVEL ######
+#<VirtualHost *:80>
+#<VirtualHost *:81>
+#    ServerName localhost
+
+#    ServerAdmin webmaster@localhost
+#    DocumentRoot /home/danigunawan/www/kmuts/public
+    #DocumentRoot /home/danigunawan/H/laravel-54-advanced-user-manager/public
+    
+#    <Directory /home/danigunawan/www/kmuts>
+     #<Directory /home/danigunawan/H/laravel-54-advanced-user-manager>  
+     #AllowOverride All
+#     Options Indexes FollowSymLinks
+#     AllowOverride All
+#     Require all granted
+#    </Directory>
+
+#    ErrorLog ${APACHE_LOG_DIR}/error.log
+#    CustomLog ${APACHE_LOG_DIR}/access.log combined
+#</VirtualHost>
+
+#### END LARAVEL ####
+
+#### APPS ####
+#listen 82
+#NameVirtualHost *:82
+
+#  <VirtualHost *:82>
+#    ServerName localhost
+
+#    ServerAdmin webmaster@localhost
+#    DocumentRoot /home/danigunawan/www
+
+#    <Directory /home/danigunawan/www>
+#        AllowOverride All
+#    </Directory>
+
+#    ErrorLog ${APACHE_LOG_DIR}/error.log
+#    CustomLog ${APACHE_LOG_DIR}/access.log combined
+#</VirtualHost>
+
+#### END APPS ####
+
+### APPS LARAGON DIR H: ####
+Listen 86
+NameVirtualHost *:86
+
+  <VirtualHost *:86>
+    ServerName localhost
+    ServerAdmin webmaster@localhost
+    DocumentRoot /home/danigunawan/www
+    
+    <Directory /home/danigunawan/www>
+    #Options Indexes FollowSymLinks
+    #AllowOverride None
+    #Require all granted
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+#### END APPS DIR H: ####
+
+
+#### SONAR APP ####
+#### https://www.howtoforge.com/tutorial/how-to-install-sonarqube-on-ubuntu-1804/ ####
+# Listen 80
+# NameVirtualHost *:80
+# <VirtualHost *:80>
+#    ServerName sonarexample.com
+#    ServerAdmin admin@sonarexample.com
+#    ProxyPreserveHost On
+#    ProxyPass / http://127.0.0.1:9000/
+#    ProxyPassReverse / http://127.0.0.1:9000/
+#    TransferLog /var/log/apache2/sonarm_access.log
+#    ErrorLog /var/log/apache2/sonar_error.log
+# </VirtualHost>
+### END SONAR APP ####
+
+#Listen 80
+#NameVirtualHost *:80
+#<VirtualHost *:80>
+#    ServerName sonarqubedev.tld
+
+#    ServerAdmin webmastersonarqube@localhost
+#    DocumentRoot /var/www/html/your-project/public
+
+#    <Directory /var/www/html/your-project>
+#        AllowOverride All
+#    </Directory>
+
+#    ErrorLog ${APACHE_LOG_DIR}/error.log
+#    CustomLog ${APACHE_LOG_DIR}/access.log combined
+#</VirtualHost>
+
+
+### APPS LARAGON DIR My Passport ####
+Listen 85
+NameVirtualHost *:85
+
+  <VirtualHost *:85>
+    ServerName localhost
+    ServerAdmin webmaster@localhost
+    DocumentRoot /mnt/dg2tb/www_laravel
+
+    <Directory /mnt/dg2tb/www_laravel>
+    #Options Indexes FollowSymLinks
+    #AllowOverride None
+    #Require all granted
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+#### END APPS DIR H: ####
+
 
 
 17. Mar 23 00:27:06 danigunawan-dsc systemd[1]: Failed to start LSB: Apache2 web server.
